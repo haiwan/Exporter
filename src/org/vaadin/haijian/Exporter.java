@@ -1,16 +1,21 @@
 package org.vaadin.haijian;
 
-import org.vaadin.haijian.filegenerator.ExcelFileBuilder;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import org.vaadin.haijian.filegenerator.FileBuilder;
 
 import com.vaadin.data.Container;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 
-public class Exporter extends Button {
-    private FileBuilder fileBuilder;
+public abstract class Exporter extends Button implements StreamSource {
+    protected FileBuilder fileBuilder;
+    private FileDownloader fileDownloader;
 
     public Exporter(Table table) {
         this(table.getContainerDataSource(), table.getVisibleColumns());
@@ -29,10 +34,9 @@ public class Exporter extends Button {
 
     public Exporter(Container container, Object[] visibleColumns) {
         setCaption("Exporter");
-        fileBuilder = new ExcelFileBuilder(container);
-        fileBuilder.setVisibleColumns(visibleColumns);
-        FileDownloader fileDownloader = new FileDownloader(new StreamResource(
-                fileBuilder, "exported-excel.xls"));
+        initFileBuilder(container, visibleColumns);
+        fileDownloader = new FileDownloader(new StreamResource(this,
+                getDownloadFileName()));
         fileDownloader.extend(this);
     }
 
@@ -46,5 +50,24 @@ public class Exporter extends Button {
 
     public void setHeader(String header) {
         fileBuilder.setHeader(header);
+    }
+
+    protected void initFileBuilder(Container container, Object[] visibleColumns) {
+        fileBuilder = createFileBuilder(container);
+        fileBuilder.setVisibleColumns(visibleColumns);
+    }
+
+    protected abstract FileBuilder createFileBuilder(Container container);
+
+    protected abstract String getDownloadFileName();
+
+    @Override
+    public InputStream getStream() {
+        try {
+            return new FileInputStream(fileBuilder.getFile());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
