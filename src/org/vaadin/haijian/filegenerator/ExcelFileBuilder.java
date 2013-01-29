@@ -1,5 +1,6 @@
 package org.vaadin.haijian.filegenerator;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -46,8 +47,14 @@ public class ExcelFileBuilder extends FileBuilder {
     }
 
     @Override
-    protected void writeToFile(FileOutputStream fos) throws IOException {
-        workbook.write(fos);
+    protected void writeToFile() {
+        try {
+            workbook.write(new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

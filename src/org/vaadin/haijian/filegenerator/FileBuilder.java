@@ -1,22 +1,17 @@
 package org.vaadin.haijian.filegenerator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
-import com.vaadin.server.StreamResource.StreamSource;
 
-public abstract class FileBuilder implements StreamSource {
-    private File file;
+public abstract class FileBuilder {
+    protected File file;
     public Container container;
-    private Object[] visibleColums;
+    private Object[] visibleColumns;
     private Map<Object, String> columnHeaderMap;
     private String header;
 
@@ -27,34 +22,45 @@ public abstract class FileBuilder implements StreamSource {
             columnHeaderMap
                     .put(propertyId, propertyId.toString().toUpperCase());
         }
-        if (visibleColums == null) {
-            visibleColums = container.getContainerPropertyIds().toArray();
+        if (visibleColumns == null) {
+            visibleColumns = container.getContainerPropertyIds().toArray();
         }
     }
 
-    public void setVisibleColumns(Object[] visibleColums) {
-        this.visibleColums = visibleColums;
+    public void setVisibleColumns(Object[] visibleColumns) {
+        this.visibleColumns = visibleColumns;
     }
 
     public File getFile() {
-        buildFileContent();
-        prepareFileForDownload();
+        if (file == null) {
+            try {
+                initTempFile();
+                buildFileContent();
+                writeToFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return file;
     }
 
-    private void buildFileContent() {
+    protected void initTempFile() throws IOException {
+        file = createTempFile();
+    }
+
+    protected void buildFileContent() {
         buildHeader();
         buildColumnHeaders();
         buildRows();
         buildFooter();
     }
 
-    private void buildColumnHeaders() {
-        if (visibleColums.length == 0) {
+    protected void buildColumnHeaders() {
+        if (visibleColumns.length == 0) {
             return;
         }
         onHeader();
-        for (Object propertyId : visibleColums) {
+        for (Object propertyId : visibleColumns) {
             String header = columnHeaderMap.get(propertyId);
             onNewCell();
             buildColumnHeaderCell(header);
@@ -85,10 +91,10 @@ public abstract class FileBuilder implements StreamSource {
     }
 
     private void buildRow(Object itemId) {
-        if (visibleColums.length == 0) {
+        if (visibleColumns.length == 0) {
             return;
         }
-        for (Object propertyId : visibleColums) {
+        for (Object propertyId : visibleColumns) {
             Property<?> property = container.getContainerProperty(itemId,
                     propertyId);
             onNewCell();
@@ -117,31 +123,11 @@ public abstract class FileBuilder implements StreamSource {
         return "tmp";
     }
 
-    protected abstract void writeToFile(FileOutputStream fos)
-            throws IOException;
-
-    private void prepareFileForDownload() {
-        try {
-            file = File.createTempFile(getFileName(), getFileExtension());
-            FileOutputStream fos = new FileOutputStream(file);
-            writeToFile(fos);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected File createTempFile() throws IOException {
+        return File.createTempFile(getFileName(), getFileExtension());
     }
 
-    @Override
-    public InputStream getStream() {
-        buildFileContent();
-        prepareFileForDownload();
-        try {
-            return new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    protected abstract void writeToFile();
 
     public void setColumnHeader(Object propertyId, String header) {
         columnHeaderMap.put(propertyId, header);
@@ -156,6 +142,6 @@ public abstract class FileBuilder implements StreamSource {
     }
 
     protected int getNumberofColumns() {
-        return visibleColums.length;
+        return visibleColumns.length;
     }
 }

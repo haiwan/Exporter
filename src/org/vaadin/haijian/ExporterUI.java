@@ -19,9 +19,13 @@ public class ExporterUI extends UI {
 
         Table sampleTable = createExampleTable();
         layout.addComponent(sampleTable);
-        Exporter tableExporter = new Exporter(sampleTable);
-        tableExporter.setCaption("Export the above Table");
-        layout.addComponent(tableExporter);
+        Exporter excelExporter = new ExcelExporter(sampleTable);
+        excelExporter.setCaption("Export to Excel");
+        layout.addComponent(excelExporter);
+        PdfExporter pdfExporter = new PdfExporter(sampleTable);
+        pdfExporter.setCaption("Export to PDF");
+        pdfExporter.setWithBorder(false);
+        layout.addComponent(pdfExporter);
     }
 
     private Table createExampleTable() {
