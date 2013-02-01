@@ -32,19 +32,21 @@ public abstract class FileBuilder {
     }
 
     public File getFile() {
-        if (file == null) {
-            try {
-                initTempFile();
-                buildFileContent();
-                writeToFile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            resetContent();
+            initTempFile();
+            buildFileContent();
+            writeToFile();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return file;
     }
 
     protected void initTempFile() throws IOException {
+        if (file != null) {
+            file.delete();
+        }
         file = createTempFile();
     }
 
@@ -53,6 +55,10 @@ public abstract class FileBuilder {
         buildColumnHeaders();
         buildRows();
         buildFooter();
+    }
+
+    protected void resetContent() {
+
     }
 
     protected void buildColumnHeaders() {

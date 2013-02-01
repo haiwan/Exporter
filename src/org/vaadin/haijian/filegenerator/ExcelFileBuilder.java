@@ -31,8 +31,6 @@ public class ExcelFileBuilder extends FileBuilder {
 
     public ExcelFileBuilder(Container container) {
         super(container);
-        workbook = new HSSFWorkbook();
-        sheet = workbook.createSheet();
     }
 
     public void setDateCellStyle(String style) {
@@ -146,5 +144,17 @@ public class ExcelFileBuilder extends FileBuilder {
         for (int i = 0; i < getNumberofColumns(); i++) {
             sheet.autoSizeColumn(i);
         }
+    }
+
+    @Override
+    protected void resetContent() {
+        workbook = new HSSFWorkbook();
+        sheet = workbook.createSheet();
+        colNr = 0;
+        rowNr = 0;
+        row = null;
+        cell = null;
+        dateCellStyle = null;
+        boldStyle = null;
     }
 }

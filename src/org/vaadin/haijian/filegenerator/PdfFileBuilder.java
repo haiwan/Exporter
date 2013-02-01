@@ -26,8 +26,6 @@ public class PdfFileBuilder extends FileBuilder {
 
     public PdfFileBuilder(Container container) {
         super(container);
-        document = new Document();
-        table = new PdfPTable(getNumberofColumns());
     }
 
     @Override
@@ -96,4 +94,9 @@ public class PdfFileBuilder extends FileBuilder {
         this.withBorder = withBorder;
     }
 
+    @Override
+    protected void resetContent() {
+        document = new Document();
+        table = new PdfPTable(getNumberofColumns());
+    }
 }
