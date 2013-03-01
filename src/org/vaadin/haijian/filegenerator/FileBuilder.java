@@ -2,13 +2,14 @@ package org.vaadin.haijian.filegenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 
-public abstract class FileBuilder {
+public abstract class FileBuilder implements Serializable {
     protected File file;
     public Container container;
     private Object[] visibleColumns;
@@ -33,8 +34,8 @@ public abstract class FileBuilder {
 
     public File getFile() {
         try {
-            resetContent();
             initTempFile();
+            resetContent();
             buildFileContent();
             writeToFile();
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public abstract class FileBuilder {
         return file;
     }
 
-    protected void initTempFile() throws IOException {
+    private void initTempFile() throws IOException {
         if (file != null) {
             file.delete();
         }

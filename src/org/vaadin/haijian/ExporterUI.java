@@ -22,6 +22,9 @@ public class ExporterUI extends UI {
         ExcelExporter excelExporter = new ExcelExporter(sampleTable);
         excelExporter.setCaption("Export to Excel");
         layout.addComponent(excelExporter);
+        CSVExporter csvExporter = new CSVExporter(sampleTable);
+        csvExporter.setCaption("Export to CSV");
+        layout.addComponent(csvExporter);
         PdfExporter pdfExporter = new PdfExporter(sampleTable);
         pdfExporter.setCaption("Export to PDF");
         pdfExporter.setWithBorder(false);

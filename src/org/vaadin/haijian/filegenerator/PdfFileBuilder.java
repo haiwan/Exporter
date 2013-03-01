@@ -1,7 +1,7 @@
 package org.vaadin.haijian.filegenerator;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -26,17 +26,6 @@ public class PdfFileBuilder extends FileBuilder {
 
     public PdfFileBuilder(Container container) {
         super(container);
-    }
-
-    @Override
-    protected void initTempFile() throws IOException {
-        super.initTempFile();
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream(file));
-            document.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -98,5 +87,13 @@ public class PdfFileBuilder extends FileBuilder {
     protected void resetContent() {
         document = new Document();
         table = new PdfPTable(getNumberofColumns());
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        document.open();
     }
 }
