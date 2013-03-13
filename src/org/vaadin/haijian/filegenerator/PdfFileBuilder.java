@@ -2,6 +2,8 @@ package org.vaadin.haijian.filegenerator;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -53,7 +55,18 @@ public class PdfFileBuilder extends FileBuilder {
 
     @Override
     protected void buildCell(Object value) {
-        PdfPCell cell = new PdfPCell(new Phrase(value.toString()));
+    	PdfPCell cell;
+    	if(value == null){
+    		cell = new PdfPCell(new Phrase(""));
+    	}else if(value instanceof Calendar){
+    		Calendar calendar = (Calendar) value;
+    		cell = new PdfPCell(new Phrase(formatDate(calendar.getTime())));
+    	}else if(value instanceof Date){
+    		cell = new PdfPCell(new Phrase(formatDate((Date) value)));
+    	}else {
+    		cell = new PdfPCell(new Phrase(value.toString()));
+    	}
+        
         if (!withBorder) {
             cell.setBorder(Rectangle.NO_BORDER);
         }

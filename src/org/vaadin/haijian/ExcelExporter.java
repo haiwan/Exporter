@@ -7,17 +7,20 @@ import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
 public class ExcelExporter extends Exporter {
+    public ExcelExporter() {
+        super();
+    }
 
     public ExcelExporter(Table table) {
         super(table);
     }
 
-    public ExcelExporter(Container container) {
-        super(container);
-    }
-
     public ExcelExporter(Container container, Object[] visibleColumns) {
         super(container, visibleColumns);
+    }
+
+    public ExcelExporter(Container container) {
+        super(container);
     }
 
     @Override

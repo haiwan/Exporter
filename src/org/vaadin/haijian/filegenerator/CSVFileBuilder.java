@@ -2,7 +2,12 @@ package org.vaadin.haijian.filegenerator;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.vaadin.data.Container;
 
 public class CSVFileBuilder extends FileBuilder {
@@ -28,7 +33,16 @@ public class CSVFileBuilder extends FileBuilder {
     @Override
     protected void buildCell(Object value) {
         try {
-            writer.append(value.toString());
+        	if(value == null){
+        		writer.append("");
+        	}else if(value instanceof Calendar){
+        		Calendar calendar = (Calendar) value;
+        		writer.append(formatDate(calendar.getTime()));
+        	}else if(value instanceof Date){
+        		writer.append(formatDate((Date) value));
+        	}else {
+        		writer.append(value.toString());
+        	}
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -7,9 +7,16 @@ import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
 public class CSVExporter extends Exporter {
+    public CSVExporter() {
+        super();
+    }
 
     public CSVExporter(Table table) {
         super(table);
+    }
+
+    public CSVExporter(Container container, Object[] visibleColumns) {
+        super(container, visibleColumns);
     }
 
     public CSVExporter(Container container) {
@@ -24,7 +31,7 @@ public class CSVExporter extends Exporter {
 
     @Override
     protected String getDownloadFileName() {
-        return "exported-csv";
+        return "exported-csv.csv";
     }
 
 }

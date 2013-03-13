@@ -7,16 +7,20 @@ import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
 public class PdfExporter extends Exporter {
+    public PdfExporter() {
+        super();
+    }
+
     public PdfExporter(Table table) {
         super(table);
     }
 
-    public PdfExporter(Container container) {
-        super(container);
-    }
-
     public PdfExporter(Container container, Object[] visibleColumns) {
         super(container, visibleColumns);
+    }
+
+    public PdfExporter(Container container) {
+        super(container);
     }
 
     @Override

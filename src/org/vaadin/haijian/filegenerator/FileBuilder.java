@@ -3,7 +3,11 @@ package org.vaadin.haijian.filegenerator;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Container;
@@ -15,8 +19,18 @@ public abstract class FileBuilder implements Serializable {
     private Object[] visibleColumns;
     private Map<Object, String> columnHeaderMap;
     private String header;
+    private Locale locale = Locale.getDefault();;
+    private String dateFormatString = "MM/dd/yyyy hh:mm";
+
+    public FileBuilder() {
+
+    }
 
     public FileBuilder(Container container) {
+        setContainer(container);
+    }
+
+    public void setContainer(Container container) {
         this.container = container;
         columnHeaderMap = new HashMap<Object, String>();
         for (Object propertyId : container.getContainerPropertyIds()) {
@@ -151,4 +165,21 @@ public abstract class FileBuilder implements Serializable {
     protected int getNumberofColumns() {
         return visibleColumns.length;
     }
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+	
+	public void setDateFormat(String dateFormat) {
+		this.dateFormatString = dateFormat;
+	}
+	
+	protected String getDateFormatString(){
+		return dateFormatString;
+	}
+	
+	protected String formatDate(Date date){
+		SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString, locale);
+		return dateFormat.format(date);
+	}
 }

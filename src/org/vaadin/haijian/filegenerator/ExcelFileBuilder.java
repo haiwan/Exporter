@@ -76,11 +76,12 @@ public class ExcelFileBuilder extends FileBuilder {
             cell.setCellValue((Boolean) value);
             cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
         } else if (value instanceof Date) {
-            cell.setCellValue((Date) value);
-            cell.setCellStyle(getDateCellStyle());
+            cell.setCellValue(formatDate((Date) value));
+            cell.setCellType(Cell.CELL_TYPE_STRING);
         } else if (value instanceof Calendar) {
-            cell.setCellValue((Calendar) value);
-            cell.setCellStyle(getDateCellStyle());
+        	Calendar calendar = (Calendar) value;
+        	cell.setCellValue(calendar.getTime());
+            cell.setCellType(Cell.CELL_TYPE_STRING);
         } else if (value instanceof Double) {
             cell.setCellValue((Double) value);
             cell.setCellType(Cell.CELL_TYPE_NUMERIC);
@@ -101,7 +102,7 @@ public class ExcelFileBuilder extends FileBuilder {
             CreationHelper createHelper = workbook.getCreationHelper();
             dateCellStyle = workbook.createCellStyle();
             dateCellStyle.setDataFormat(createHelper.createDataFormat()
-                    .getFormat(DATE_CELL_STYLE));
+                    .getFormat(getDateFormatString()));
         }
         return dateCellStyle;
     }
