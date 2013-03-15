@@ -31,7 +31,14 @@ public class CSVExporter extends Exporter {
 
     @Override
     protected String getDownloadFileName() {
-        return "exported-csv.csv";
+    	if(downloadFileName == null){
+    		return "exported-csv.csv";
+        }
+    	if(downloadFileName.endsWith(".csv")){
+    		return downloadFileName;
+    	}else{
+    		return downloadFileName + ".csv";
+    	}
     }
 
 }

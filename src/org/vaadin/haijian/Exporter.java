@@ -20,6 +20,7 @@ public abstract class Exporter extends Button implements StreamSource {
     private FileDownloader fileDownloader;
     private Locale locale;
     private String dateFormatString;
+    protected String downloadFileName;
 
     public Exporter() {
         fileDownloader = new FileDownloader(new StreamResource(this,
@@ -88,6 +89,11 @@ public abstract class Exporter extends Button implements StreamSource {
     protected abstract FileBuilder createFileBuilder(Container container);
 
     protected abstract String getDownloadFileName();
+    
+    public void setDownloadFileName(String fileName){
+    	downloadFileName = fileName;
+    	((StreamResource)fileDownloader.getFileDownloadResource()).setFilename(getDownloadFileName());
+    }
 
     @Override
     public InputStream getStream() {

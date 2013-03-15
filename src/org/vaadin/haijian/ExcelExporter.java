@@ -30,6 +30,13 @@ public class ExcelExporter extends Exporter {
 
     @Override
     protected String getDownloadFileName() {
-        return "exported-excel.xls";
+    	if(downloadFileName == null){
+    		return "exported-excel.xls";
+        }
+    	if(downloadFileName.endsWith(".xls")){
+    		return downloadFileName;
+    	}else{
+    		return downloadFileName + ".xls";
+    	}
     }
 }

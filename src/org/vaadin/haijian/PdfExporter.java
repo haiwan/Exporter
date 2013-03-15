@@ -30,11 +30,18 @@ public class PdfExporter extends Exporter {
 
     @Override
     protected String getDownloadFileName() {
-        return "exported-pdf.pdf";
+    	if(downloadFileName == null){
+    		return "exported-pdf.pdf";
+        }
+    	if(downloadFileName.endsWith(".pdf")){
+    		return downloadFileName;
+    	}else{
+    		return downloadFileName + ".pdf";
+    	}
     }
 
     public void setWithBorder(boolean withBorder) {
         ((PdfFileBuilder) fileBuilder).setWithBorder(withBorder);
     }
-
+    
 }
