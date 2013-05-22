@@ -28,6 +28,11 @@ public class CSVExporter extends Exporter {
         // TODO Auto-generated method stub
         return new CSVFileBuilder(container);
     }
+    
+    @Override
+    protected FileBuilder createFileBuilder(Table table) {
+        return new CSVFileBuilder(table);
+    }
 
     @Override
     protected String getDownloadFileName() {
