@@ -12,10 +12,13 @@ import java.util.Map;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.ui.Table;
 
 public abstract class FileBuilder implements Serializable {
     protected File file;
     public Container container;
+    public Table table;
     private Object[] visibleColumns;
     private Map<Object, String> columnHeaderMap;
     private String header;
@@ -27,8 +30,17 @@ public abstract class FileBuilder implements Serializable {
     }
 
     public FileBuilder(Container container) {
-        setContainer(container);
+		setContainer(container);
     }
+    
+    public FileBuilder(Table table) {
+        setTable(table);
+    }
+
+	public void setTable(Table table) {
+		this.table = table;
+		setContainer(table.getContainerDataSource());
+	}
 
     public void setContainer(Container container) {
         this.container = container;
@@ -118,8 +130,17 @@ public abstract class FileBuilder implements Serializable {
         for (Object propertyId : visibleColumns) {
             Property<?> property = container.getContainerProperty(itemId,
                     propertyId);
+            
+            Object modelValue = property != null ? property.getValue() : null;
+    		Object presentationValue = modelValue;
+           
+    		Converter<String, Object> converter = table != null ? table.getConverter(propertyId) : null;
+    		if (converter != null && modelValue != null) {
+    			presentationValue = converter.convertToPresentation(property.getValue(), locale);
+    		}
+    		
             onNewCell();
-            buildCell(property == null ? null : property.getValue());
+            buildCell(modelValue, presentationValue);
         }
     }
 
@@ -131,7 +152,16 @@ public abstract class FileBuilder implements Serializable {
 
     }
 
-    protected abstract void buildCell(Object value);
+    
+    /**
+     * Build the cell, with the provided value. If the implementation supports formatting specific 
+     * classes, it should attempt to use modelValue. If modelValue has an unknown classes, it 
+     * should rely on presentationValue, that will use Table's converters if available.
+     * 
+     * @param modelValue The model value
+     * @param presentationValue The presentation value, using the table converter if available.
+     */
+    protected abstract void buildCell(Object modelValue, Object presentationValue);
 
     protected void buildFooter() {
         // TODO Auto-generated method stub

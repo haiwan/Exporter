@@ -16,6 +16,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.Container;
+import com.vaadin.ui.Table;
 
 public class PdfFileBuilder extends FileBuilder {
     private Document document;
@@ -30,6 +31,10 @@ public class PdfFileBuilder extends FileBuilder {
         super(container);
     }
 
+    public PdfFileBuilder(Table table) {
+        super(table);
+    }
+    
     @Override
     protected void buildHeader() {
         if (getHeader() != null) {
@@ -54,17 +59,17 @@ public class PdfFileBuilder extends FileBuilder {
     }
 
     @Override
-    protected void buildCell(Object value) {
+    protected void buildCell(Object modelValue, Object presentationValue) {
     	PdfPCell cell;
-    	if(value == null){
+    	if(modelValue == null){
     		cell = new PdfPCell(new Phrase(""));
-    	}else if(value instanceof Calendar){
-    		Calendar calendar = (Calendar) value;
+    	}else if(modelValue instanceof Calendar){
+    		Calendar calendar = (Calendar) modelValue;
     		cell = new PdfPCell(new Phrase(formatDate(calendar.getTime())));
-    	}else if(value instanceof Date){
-    		cell = new PdfPCell(new Phrase(formatDate((Date) value)));
+    	}else if(modelValue instanceof Date){
+    		cell = new PdfPCell(new Phrase(formatDate((Date) modelValue)));
     	}else {
-    		cell = new PdfPCell(new Phrase(value.toString()));
+    		cell = new PdfPCell(new Phrase(presentationValue.toString()));
     	}
         
         if (!withBorder) {

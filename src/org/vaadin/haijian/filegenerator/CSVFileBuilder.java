@@ -9,6 +9,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.vaadin.data.Container;
+import com.vaadin.ui.Table;
 
 public class CSVFileBuilder extends FileBuilder {
     private FileWriter writer;
@@ -17,6 +18,10 @@ public class CSVFileBuilder extends FileBuilder {
 
     public CSVFileBuilder(Container container) {
         super(container);
+    }
+    
+    public CSVFileBuilder(Table table) {
+        super(table);
     }
 
     @Override
@@ -31,17 +36,17 @@ public class CSVFileBuilder extends FileBuilder {
     }
 
     @Override
-    protected void buildCell(Object value) {
+    protected void buildCell(Object modelValue, Object presentationValue) {
         try {
-        	if(value == null){
+        	if(modelValue == null){
         		writer.append("");
-        	}else if(value instanceof Calendar){
-        		Calendar calendar = (Calendar) value;
+        	}else if(modelValue instanceof Calendar){
+        		Calendar calendar = (Calendar) modelValue;
         		writer.append(formatDate(calendar.getTime()));
-        	}else if(value instanceof Date){
-        		writer.append(formatDate((Date) value));
+        	}else if(modelValue instanceof Date){
+        		writer.append(formatDate((Date) modelValue));
         	}else {
-        		writer.append(value.toString());
+        		writer.append(presentationValue.toString());
         	}
         } catch (IOException e) {
             e.printStackTrace();
