@@ -7,7 +7,9 @@ import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
 public class PdfExporter extends Exporter {
-    public PdfExporter() {
+	private static final long serialVersionUID = 1L;
+
+	public PdfExporter() {
         super();
     }
 

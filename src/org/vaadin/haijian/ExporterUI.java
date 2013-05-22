@@ -3,7 +3,6 @@ package org.vaadin.haijian;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Table;
