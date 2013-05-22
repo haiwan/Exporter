@@ -19,7 +19,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import com.vaadin.data.Container;
 
 public class ExcelFileBuilder extends FileBuilder {
-    private static final String DATE_CELL_STYLE = "m/d/yy h:mm";
+	private static final long serialVersionUID = 1L;
+
     private Workbook workbook;
     private Sheet sheet;
     private int rowNr;

@@ -7,7 +7,9 @@ import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
 public class ExcelExporter extends Exporter {
-    public ExcelExporter() {
+	private static final long serialVersionUID = 1L;
+
+	public ExcelExporter() {
         super();
     }
 

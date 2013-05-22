@@ -3,7 +3,6 @@ package org.vaadin.haijian.filegenerator;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +13,9 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 
 public abstract class FileBuilder implements Serializable {
-    protected File file;
+	private static final long serialVersionUID = 1L;
+
+	protected File file;
     public Container container;
     private Object[] visibleColumns;
     private Map<Object, String> columnHeaderMap;

@@ -7,7 +7,9 @@ import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
 public class CSVExporter extends Exporter {
-    public CSVExporter() {
+	private static final long serialVersionUID = 1L;
+
+	public CSVExporter() {
         super();
     }
 
@@ -25,7 +27,6 @@ public class CSVExporter extends Exporter {
 
     @Override
     protected FileBuilder createFileBuilder(Container container) {
-        // TODO Auto-generated method stub
         return new CSVFileBuilder(container);
     }
 
