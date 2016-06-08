@@ -6,7 +6,7 @@
 	<artifactId>exporter</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.6</version>
-	<name>Exporter Add-on</name>
+	<name>Exporter</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
