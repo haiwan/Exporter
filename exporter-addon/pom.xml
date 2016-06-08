@@ -6,7 +6,7 @@
 	<artifactId>exporter</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.6</version>
-	<name>Exporter</name>
+	<name>Exporter Add-on</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -130,6 +130,7 @@
 							<!-- Package format version - do not change -->
 							<Vaadin-Package-Version>1</Vaadin-Package-Version>
 							<Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
+							<Vaadin-Widgetsets>org.vaadin.addons.WidgetSet</Vaadin-Widgetsets>
 						</manifestEntries>
 					</archive>
 				</configuration>

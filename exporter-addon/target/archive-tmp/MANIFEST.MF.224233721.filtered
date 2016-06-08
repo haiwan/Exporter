@@ -1,7 +1,0 @@
-Manifest-Version: 0.0.6
-Vaadin-Package-Version: 1
-Vaadin-Addon: exporter-0.0.6.jar
-Vaadin-License-Title: Apache License 2.0
-Implementation-Vendor: ${project.organization.name}
-Implementation-Title: Exporter
-Implementation-Version: 0.0.6
