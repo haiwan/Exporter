@@ -4,12 +4,12 @@
 *.jar
 *.war
 *.ear
-.idea/
-*.iml
 .project
+*.iml
+widgetsets/
+.idea/
+*.cache
 .classpath
 .DS_Store
-*.cache
 .settings/
-widgetsets/
 /target/

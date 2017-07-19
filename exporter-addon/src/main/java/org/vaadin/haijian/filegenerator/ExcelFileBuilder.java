@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.vaadin.data.Container;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -15,8 +17,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-
-import com.vaadin.data.Container;
 
 public class ExcelFileBuilder extends FileBuilder {
     private static final String DATE_CELL_STYLE = "m/d/yy h:mm";

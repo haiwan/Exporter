@@ -1,10 +1,9 @@
 package org.vaadin.haijian;
 
-import org.vaadin.haijian.filegenerator.CSVFileBuilder;
-import org.vaadin.haijian.filegenerator.FileBuilder;
-
 import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
+import org.vaadin.haijian.filegenerator.CSVFileBuilder;
+import org.vaadin.haijian.filegenerator.FileBuilder;
 
 public class CSVExporter extends Exporter {
     public CSVExporter() {

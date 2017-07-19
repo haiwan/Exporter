@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons</groupId>
 	<artifactId>exporter-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.6</version>
+	<version>0.0.7</version>
 	<name>Exporter Add-on Demo</name>
 
 	<properties>

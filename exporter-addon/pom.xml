@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons</groupId>
 	<artifactId>exporter</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.6</version>
+	<version>0.0.7</version>
 	<name>Exporter</name>
 
 	<properties>
@@ -80,12 +80,6 @@
 			<artifactId>vaadin-client</artifactId>
 			<version>${vaadin.version}</version>
 			<scope>provided</scope>
-		</dependency>
-		<!-- http://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.3.4</version>
 		</dependency>
 		<!-- http://mvnrepository.com/artifact/org.apache.poi/poi -->
 		<dependency>

@@ -3,7 +3,6 @@ package org.vaadin.haijian;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Table;
@@ -37,13 +36,8 @@ public class ExporterUI extends UI {
 	                .getContainerDataSource());
 	        csvExporter.setVisibleColumns(sampleTable.getVisibleColumns());
 	        layout.addComponent(csvExporter);
-	        PdfExporter pdfExporter = new PdfExporter(sampleTable);
-	        pdfExporter.setCaption("Export to PDF");
-	        pdfExporter.setWithBorder(false);
-	        layout.addComponent(pdfExporter);
 	        
 	        excelExporter.setDownloadFileName("demo-excel-exporter");
-	        pdfExporter.setDownloadFileName("demo-pdf-exporter.pdf");
 	        csvExporter.setDownloadFileName("demo-csv-exporter.csv");
 		} catch (UnsupportedOperationException e) {
 			e.printStackTrace();

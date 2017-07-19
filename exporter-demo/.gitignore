@@ -1,1 +1,15 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+.project
+*.iml
+widgetsets/
+.idea/
+.classpath
+*.cache
+.DS_Store
+.settings/
 /target/

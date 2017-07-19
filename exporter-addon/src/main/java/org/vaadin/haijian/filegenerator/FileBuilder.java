@@ -3,7 +3,6 @@ package org.vaadin.haijian.filegenerator;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;

@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.haijian.CSVExporter;
 import org.vaadin.haijian.ExcelExporter;
-import org.vaadin.haijian.PdfExporter;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -51,13 +50,8 @@ public class DemoUI extends UI
                                                  .getContainerDataSource());
             csvExporter.setVisibleColumns(sampleTable.getVisibleColumns());
             layout.addComponent(csvExporter);
-            PdfExporter pdfExporter = new PdfExporter(sampleTable);
-            pdfExporter.setCaption("Export to PDF");
-            pdfExporter.setWithBorder(false);
-            layout.addComponent(pdfExporter);
             
             excelExporter.setDownloadFileName("demo-excel-exporter");
-            pdfExporter.setDownloadFileName("demo-pdf-exporter.pdf");
             csvExporter.setDownloadFileName("demo-csv-exporter.csv");
         } catch (UnsupportedOperationException e) {
             e.printStackTrace();

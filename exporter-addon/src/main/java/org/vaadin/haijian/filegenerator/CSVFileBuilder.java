@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfPCell;
 import com.vaadin.data.Container;
 
 public class CSVFileBuilder extends FileBuilder {
