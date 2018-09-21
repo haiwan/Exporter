@@ -1,3 +1,6 @@
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/exporter)
+[![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/exporter.svg)](https://vaadin.com/directory/component/exporter)
+
 # Exporter Add-on for Vaadin 7
 
 Exporter is a Data component add-on for Vaadin 7.
