@@ -4,15 +4,13 @@ import com.vaadin.flow.component.grid.Grid;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 
 public class CSVFileBuilder<T> extends FileBuilder<T> {
     private FileWriter writer;
     private int rowNr;
     private int colNr;
 
-    public CSVFileBuilder(Grid<T> grid) {
+    CSVFileBuilder(Grid<T> grid) {
         super(grid);
     }
 
@@ -32,11 +30,6 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
         try {
             if(value == null){
                 writer.append("");
-            }else if(value instanceof Calendar){
-                Calendar calendar = (Calendar) value;
-                writer.append(formatDate(calendar.getTime()));
-            }else if(value instanceof Date){
-                writer.append(formatDate((Date) value));
             }else {
                 writer.append(value.toString());
             }
@@ -75,7 +68,7 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
 
     @Override
     protected void onNewCell() {
-        if (colNr > 0 && colNr < getNumberofColumns()) {
+        if (colNr > 0 && colNr < getNumberOfColumns()) {
             try {
                 writer.append(",");
             } catch (IOException e) {

@@ -12,34 +12,45 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class FileBuilder<T>{
-    protected File file;
+public abstract class FileBuilder<T> {
+    File file;
     private Grid<T> grid;
     private Collection<Grid.Column> columns;
-    private String header;
-    private Locale locale = Locale.getDefault();;
-    private String dateFormatString = "MM/dd/yyyy hh:mm";
     private PropertySet<T> propertySet;
+    private boolean headerRowBuilt = false;
 
-    public FileBuilder(Grid<T> grid) {
+    FileBuilder(Grid<T> grid) {
         this.grid = grid;
-        columns = grid.getColumns().stream().filter(Grid.Column::isVisible).collect(Collectors.toList());
-        boolean hasColumnWithKeyUndefined = columns.stream().anyMatch(column -> column.getKey()==null);
-        if(hasColumnWithKeyUndefined){
-            throw new RuntimeException("Please define a key for every visible column, key should be the property name");
+        columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
+        try {
+            Field field = Grid.class.getDeclaredField("propertySet");
+            field.setAccessible(true);
+            Object propertySetRaw = field.get(grid);
+            if (propertySetRaw != null) {
+                propertySet = (PropertySet<T>) propertySetRaw;
+            }
+        } catch (Exception e) {
+            System.out.println("couldn't ready property set");
+            LoggerFactory.getLogger(FileBuilder.class).warn("");
+        }
+        if (columns.isEmpty()) {
+            throw new RuntimeException("No exportable column found, did you remember to set property name as the key for column");
         }
     }
 
-    public InputStream build() {
+    private boolean isExportable(Grid.Column<T> column) {
+        return column.isVisible() && column.getKey() != null && !column.getKey().isEmpty()
+                && (propertySet == null || propertySet.getProperty(column.getKey()).isPresent());
+    }
+
+    InputStream build() {
         try {
             initTempFile();
             resetContent();
@@ -58,9 +69,7 @@ public abstract class FileBuilder<T>{
         file = createTempFile();
     }
 
-    protected void buildFileContent() {
-        buildHeader();
-        buildColumnHeaders();
+    private void buildFileContent() {
         buildRows();
         buildFooter();
     }
@@ -69,41 +78,21 @@ public abstract class FileBuilder<T>{
 
     }
 
-    protected void buildColumnHeaders() {
-
-        /*
-        grid.getHeaderRows().forEach(headerRow -> {
-            onHeader();
-            headerRow.getCells().forEach(cell -> {
-                onNewCell();
-                buildColumnHeaderCell(cell.g);
-            });
-        });
-
-        if (columns.isEmpty()) {
-            return;
-        }
-        onHeader();
+    void buildHeaderRow() {
         columns.forEach(column -> {
-            String header
+            Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getKey());
+            if (propertyDefinition.isPresent()) {
+                onNewCell();
+                buildColumnHeaderCell(propertyDefinition.get().getCaption());
+            } else {
+                throw new RuntimeException("Column key: " + column.getKey() + " is a property which cannot be found");
+            }
         });
-        for (Object propertyId : visibleColumns) {
-            String header = columnHeaderMap.get(propertyId);
-            onNewCell();
-            buildColumnHeaderCell(header);
-        }*/
+        headerRowBuilt = true;
     }
 
-    protected void onHeader() {
-        onNewRow();
-    }
 
-    protected void buildColumnHeaderCell(String header) {
-
-    }
-
-    protected void buildHeader() {
-        // TODO Auto-generated method stub
+    void buildColumnHeaderCell(String header) {
 
     }
 
@@ -119,81 +108,61 @@ public abstract class FileBuilder<T>{
 
         Query streamQuery = new Query(0, grid.getDataProvider().size(new Query(filter)), grid.getDataCommunicator().getBackEndSorting(),
                 grid.getDataCommunicator().getInMemorySorting(), null);
-        Stream<T> stream = getDataStream(streamQuery);
-        stream.forEach( t -> {
+        Stream<T> dataStream = getDataStream(streamQuery);
+
+        dataStream.forEach(t -> {
             onNewRow();
             buildRow(t);
         });
     }
 
     private void buildRow(T item) {
-        if(propertySet==null){
+        if (propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
+        }
+        if(!headerRowBuilt){
+            buildHeaderRow();
+            onNewRow();
         }
         columns.forEach(column -> {
             Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getKey());
-            if(propertyDefinition.isPresent()){
+            if (propertyDefinition.isPresent()) {
                 onNewCell();
                 buildCell(propertyDefinition.get().getGetter().apply(item));
-            }else {
-                throw new RuntimeException("Column key: "+column.getKey()+" is a property which cannot be found");
+            } else {
+                throw new RuntimeException("Column key: " + column.getKey() + " is a property which cannot be found");
             }
         });
     }
 
-    protected void onNewRow() {
+    void onNewRow() {
 
     }
 
-    protected void onNewCell() {
+    void onNewCell() {
 
     }
 
-    protected abstract void buildCell(Object value);
+    abstract void buildCell(Object value);
 
-    protected void buildFooter() {
+    void buildFooter() {
 
     }
 
-    protected abstract String getFileExtension();
+    abstract String getFileExtension();
 
-    protected String getFileName() {
+    String getFileName() {
         return "tmp";
     }
 
-    protected File createTempFile() throws IOException {
+    File createTempFile() throws IOException {
         return File.createTempFile(getFileName(), getFileExtension());
     }
 
-    protected abstract void writeToFile();
+    abstract void writeToFile();
 
-    public String getHeader() {
-        return header;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
-    protected int getNumberofColumns() {
+    int getNumberOfColumns() {
         return columns.size();
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public void setDateFormat(String dateFormat) {
-        this.dateFormatString = dateFormat;
-    }
-
-    protected String getDateFormatString(){
-        return dateFormatString;
-    }
-
-    protected String formatDate(Date date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString, locale);
-        return dateFormat.format(date);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

@@ -1,41 +1,25 @@
 package org.vaadin.haijian;
 
+import com.vaadin.flow.component.grid.Grid;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
-
-import com.vaadin.flow.component.grid.Grid;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
 
 public class ExcelFileBuilder<T> extends FileBuilder<T> {
-    private static final String DATE_CELL_STYLE = "m/d/yy h:mm";
     private Workbook workbook;
     private Sheet sheet;
     private int rowNr;
     private int colNr;
     private Row row;
     private Cell cell;
-    private CellStyle dateCellStyle;
     private CellStyle boldStyle;
 
-    public ExcelFileBuilder(Grid<T> grid) {
+    ExcelFileBuilder(Grid<T> grid) {
         super(grid);
-    }
-
-    public void setDateCellStyle(String style) {
-        CreationHelper createHelper = workbook.getCreationHelper();
-        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
-                style));
     }
 
     @Override
@@ -74,9 +58,6 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
             cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
-        } else if (value instanceof Date) {
-            cell.setCellValue(formatDate((Date) value));
-            cell.setCellType(Cell.CELL_TYPE_STRING);
         } else if (value instanceof Calendar) {
             Calendar calendar = (Calendar) value;
             cell.setCellValue(calendar.getTime());
@@ -96,16 +77,6 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
         cell.setCellStyle(getBoldStyle());
     }
 
-    public CellStyle getDateCellStyle() {
-        if (dateCellStyle == null) {
-            CreationHelper createHelper = workbook.getCreationHelper();
-            dateCellStyle = workbook.createCellStyle();
-            dateCellStyle.setDataFormat(createHelper.createDataFormat()
-                    .getFormat(getDateFormatString()));
-        }
-        return dateCellStyle;
-    }
-
     private CellStyle getBoldStyle() {
         if (boldStyle == null) {
             Font bold = workbook.createFont();
@@ -118,30 +89,8 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     }
 
     @Override
-    protected void buildHeader() {
-        if (getHeader() == null) {
-            return;
-        }
-        onNewRow();
-        onNewCell();
-        cell.setCellValue(getHeader());
-
-        Font headerFont = workbook.createFont();
-        headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        headerFont.setFontHeightInPoints((short) 15);
-        CellStyle headerStyle = workbook.createCellStyle();
-        headerStyle.setFont(headerFont);
-        headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cell.setCellStyle(headerStyle);
-
-        sheet.addMergedRegion(new CellRangeAddress(0, 1, 0,
-                getNumberofColumns() - 1));
-        onNewRow();
-    }
-
-    @Override
     protected void buildFooter() {
-        for (int i = 0; i < getNumberofColumns(); i++) {
+        for (int i = 0; i < getNumberOfColumns(); i++) {
             sheet.autoSizeColumn(i);
         }
     }
@@ -154,7 +103,6 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
         rowNr = 0;
         row = null;
         cell = null;
-        dateCellStyle = null;
         boldStyle = null;
     }
 }
