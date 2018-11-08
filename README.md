@@ -1,7 +1,10 @@
 # Exporter
 
-Vaadin 10 Java integration of https://github.com/PolymerElements/paper-slider
-
+Allows you to export data from Grid to an Excel or CSV file
+```
+Anchor downloadAsExcel = new Anchor(new StreamResource("my-excel.xls", Exporter.exportAsExcel(grid)), "Download As Excel");
+Anchor downloadAsCSV = new Anchor(new StreamResource("my-csv.csv", Exporter.exportAsCSV(grid)), "Download As CSV");
+```
 ## Development instructions
 
 Starting the test/demo server:
@@ -10,9 +13,3 @@ mvn jetty:run
 ```
 
 This deploys demo at http://localhost:8080
-
-### Branching information
-
-* `master` the latest version of the starter, using latest platform snapshot
-* `V10` the version for Vaadin 10
-* `V11` the version for Vaadin 11
