@@ -105,7 +105,3 @@ export data to excel file
 ### Feature B
 
 export data to csv file
-
-### Feature C
-
-export data to pdf file
