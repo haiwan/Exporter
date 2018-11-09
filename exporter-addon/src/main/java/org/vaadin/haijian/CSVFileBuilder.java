@@ -1,19 +1,18 @@
-package org.vaadin.haijian.filegenerator;
+package org.vaadin.haijian;
+
+import com.vaadin.ui.Grid;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 
-import com.vaadin.data.Container;
-
-public class CSVFileBuilder extends FileBuilder {
+public class CSVFileBuilder<T> extends FileBuilder<T> {
     private FileWriter writer;
     private int rowNr;
     private int colNr;
 
-    public CSVFileBuilder(Container container) {
-        super(container);
+    CSVFileBuilder(Grid<T> grid) {
+        super(grid);
     }
 
     @Override
@@ -23,25 +22,20 @@ public class CSVFileBuilder extends FileBuilder {
             rowNr = 0;
             writer = new FileWriter(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExporterException("Unable to reset content", e);
         }
     }
 
     @Override
     protected void buildCell(Object value) {
         try {
-        	if(value == null){
-        		writer.append("");
-        	}else if(value instanceof Calendar){
-        		Calendar calendar = (Calendar) value;
-        		writer.append(formatDate(calendar.getTime()));
-        	}else if(value instanceof Date){
-        		writer.append(formatDate((Date) value));
-        	}else {
-        		writer.append(value.toString());
-        	}
+            if(value == null){
+                writer.append("");
+            }else {
+                writer.append(value.toString());
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(this.getClass()).error("Error building cell "+value, e);
         }
     }
 
@@ -54,9 +48,20 @@ public class CSVFileBuilder extends FileBuilder {
     protected void writeToFile() {
         try {
             writer.flush();
-            writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExporterException("Failed to write to file", e);
+        } finally {
+            cleanupResource();
+        }
+    }
+
+    private void cleanupResource(){
+        try{
+            if(writer!=null){
+                writer.close();
+            }
+        }catch (IOException e){
+            LoggerFactory.getLogger(this.getClass()).error("Unable to close the writer for CSV file", e);
         }
     }
 
@@ -66,7 +71,7 @@ public class CSVFileBuilder extends FileBuilder {
             try {
                 writer.append("\n");
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ExporterException("Unable to create a new line", e);
             }
         }
         rowNr++;
@@ -75,11 +80,11 @@ public class CSVFileBuilder extends FileBuilder {
 
     @Override
     protected void onNewCell() {
-        if (colNr > 0 && colNr < getNumberofColumns()) {
+        if (colNr > 0 && colNr < getNumberOfColumns()) {
             try {
                 writer.append(",");
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ExporterException("Unable to create a new cell", e);
             }
         }
         colNr++;
@@ -90,7 +95,7 @@ public class CSVFileBuilder extends FileBuilder {
         try {
             writer.append(header);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExporterException("Unable to build a header cell", e);
         }
     }
 
