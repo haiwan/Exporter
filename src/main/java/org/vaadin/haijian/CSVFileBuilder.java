@@ -1,6 +1,7 @@
 package org.vaadin.haijian;
 
 import com.vaadin.flow.component.grid.Grid;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
             rowNr = 0;
             writer = new FileWriter(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExporterException("Unable to reset content", e);
         }
     }
 
@@ -34,7 +35,7 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
                 writer.append(value.toString());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(this.getClass()).error("Error building cell "+value, e);
         }
     }
 
@@ -47,9 +48,20 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
     protected void writeToFile() {
         try {
             writer.flush();
-            writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExporterException("Failed to write to file", e);
+        } finally {
+            cleanupResource();
+        }
+    }
+
+    private void cleanupResource(){
+        try{
+            if(writer!=null){
+                writer.close();
+            }
+        }catch (IOException e){
+            LoggerFactory.getLogger(this.getClass()).error("Unable to close the writer for CSV file", e);
         }
     }
 
@@ -59,7 +71,7 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
             try {
                 writer.append("\n");
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ExporterException("Unable to create a new line", e);
             }
         }
         rowNr++;
@@ -72,7 +84,7 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
             try {
                 writer.append(",");
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ExporterException("Unable to create a new cell", e);
             }
         }
         colNr++;
@@ -83,7 +95,7 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
         try {
             writer.append(header);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExporterException("Unable to build a header cell", e);
         }
     }
 

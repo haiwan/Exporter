@@ -71,7 +71,7 @@ public class PersonService {
 			final Random r = new Random();
 
 			persons = new ArrayList<>();
-			for (int i = 0; i < 500; i++) {
+			for (int i = 0; i < 5000; i++) {
 				final Person person = new Person();
 				person.setName(firstName[r.nextInt(firstName.length)] + " " + lastName[r.nextInt(lastName.length)]);
 				person.setAge(r.nextInt(50) + 18);

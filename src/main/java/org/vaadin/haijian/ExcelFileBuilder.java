@@ -3,13 +3,14 @@ package org.vaadin.haijian;
 import com.vaadin.flow.component.grid.Grid;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Calendar;
 
 public class ExcelFileBuilder<T> extends FileBuilder<T> {
+    private static final String EXCEL_FILE_EXTENSION = ".xls";
+
     private Workbook workbook;
     private Sheet sheet;
     private int rowNr;
@@ -24,17 +25,15 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
 
     @Override
     public String getFileExtension() {
-        return ".xls";
+        return EXCEL_FILE_EXTENSION;
     }
 
     @Override
     protected void writeToFile() {
         try {
             workbook.write(new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LoggerFactory.getLogger(this.getClass()).error("Error writing excel file", e);
         }
     }
 

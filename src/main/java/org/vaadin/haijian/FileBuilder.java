@@ -20,12 +20,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class FileBuilder<T> {
+    private static final String TMP_FILE_NAME = "tmp";
+
     File file;
     private Grid<T> grid;
     private Collection<Grid.Column> columns;
     private PropertySet<T> propertySet;
     private boolean headerRowBuilt = false;
 
+    @SuppressWarnings("unchecked")
     FileBuilder(Grid<T> grid) {
         this.grid = grid;
         columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
@@ -37,11 +40,10 @@ public abstract class FileBuilder<T> {
                 propertySet = (PropertySet<T>) propertySetRaw;
             }
         } catch (Exception e) {
-            System.out.println("couldn't ready property set");
-            LoggerFactory.getLogger(FileBuilder.class).warn("");
+            throw new ExporterException("couldn't read propertyset information from grid", e);
         }
         if (columns.isEmpty()) {
-            throw new RuntimeException("No exportable column found, did you remember to set property name as the key for column");
+            throw new ExporterException("No exportable column found, did you remember to set property name as the key for column");
         }
     }
 
@@ -58,15 +60,14 @@ public abstract class FileBuilder<T> {
             writeToFile();
             return new FileInputStream(file);
         } catch (Exception e) {
-            throw new RuntimeException("An error happened during exporting your Grid", e);
+            throw new ExporterException("An error happened during exporting your Grid", e);
         }
     }
 
     private void initTempFile() throws IOException {
-        if (file != null) {
-            file.delete();
+        if (file == null || file.delete()) {
+            file = createTempFile();
         }
-        file = createTempFile();
     }
 
     private void buildFileContent() {
@@ -78,14 +79,14 @@ public abstract class FileBuilder<T> {
 
     }
 
-    void buildHeaderRow() {
+    private void buildHeaderRow() {
         columns.forEach(column -> {
             Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getKey());
             if (propertyDefinition.isPresent()) {
                 onNewCell();
                 buildColumnHeaderCell(propertyDefinition.get().getCaption());
             } else {
-                throw new RuntimeException("Column key: " + column.getKey() + " is a property which cannot be found");
+                LoggerFactory.getLogger(this.getClass()).warn(String.format("Column key %s is a property which cannot be found", column.getKey()));
             }
         });
         headerRowBuilt = true;
@@ -96,6 +97,7 @@ public abstract class FileBuilder<T> {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void buildRows() {
         Object filter = null;
         try {
@@ -103,7 +105,7 @@ public abstract class FileBuilder<T> {
             method.setAccessible(true);
             filter = method.invoke(grid.getDataCommunicator());
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(this.getClass()).error("Unable to get filter from DataCommunicator");
         }
 
         Query streamQuery = new Query(0, grid.getDataProvider().size(new Query(filter)), grid.getDataCommunicator().getBackEndSorting(),
@@ -116,11 +118,12 @@ public abstract class FileBuilder<T> {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void buildRow(T item) {
         if (propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
         }
-        if(!headerRowBuilt){
+        if (!headerRowBuilt) {
             buildHeaderRow();
             onNewRow();
         }
@@ -130,7 +133,7 @@ public abstract class FileBuilder<T> {
                 onNewCell();
                 buildCell(propertyDefinition.get().getGetter().apply(item));
             } else {
-                throw new RuntimeException("Column key: " + column.getKey() + " is a property which cannot be found");
+                throw new ExporterException("Column key: " + column.getKey() + " is a property which cannot be found");
             }
         });
     }
@@ -151,12 +154,8 @@ public abstract class FileBuilder<T> {
 
     abstract String getFileExtension();
 
-    String getFileName() {
-        return "tmp";
-    }
-
-    File createTempFile() throws IOException {
-        return File.createTempFile(getFileName(), getFileExtension());
+    private File createTempFile() throws IOException {
+        return File.createTempFile(TMP_FILE_NAME, getFileExtension());
     }
 
     abstract void writeToFile();
