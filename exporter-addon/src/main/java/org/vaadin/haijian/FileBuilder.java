@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Optional;
@@ -32,22 +31,12 @@ public abstract class FileBuilder<T> {
     FileBuilder(Grid<T> grid) {
         this.grid = grid;
         columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
-        try {
-            Field field = Grid.class.getDeclaredField("propertySet");
-            field.setAccessible(true);
-            Object propertySetRaw = field.get(grid);
-            if (propertySetRaw != null) {
-                propertySet = (PropertySet<T>) propertySetRaw;
-            }
-        } catch (Exception e) {
-            throw new ExporterException("couldn't read propertyset information from grid", e);
-        }
         if (columns.isEmpty()) {
             throw new ExporterException("No exportable column found, did you remember to set property name as the key for column");
         }
     }
 
-    private boolean isExportable(Grid.Column<T, ?> column) {
+    private boolean isExportable(Grid.Column column) {
         return !column.isHidden() && column.getId() != null && !column.getId().isEmpty()
                 && (propertySet == null || propertySet.getProperty(column.getId()).isPresent());
     }
@@ -122,6 +111,7 @@ public abstract class FileBuilder<T> {
     private void buildRow(T item) {
         if (propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
+            columns = columns.stream().filter(this::isExportable).collect(Collectors.toList());
         }
         if (!headerRowBuilt) {
             buildHeaderRow();

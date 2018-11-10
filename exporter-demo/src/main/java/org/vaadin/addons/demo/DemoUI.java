@@ -10,7 +10,7 @@ import org.vaadin.addons.demo.helpers.GridDemoViewCreator;
 
 import javax.servlet.annotation.WebServlet;
 
-@Theme("demo")
+@Theme("valo")
 @Title("MyComponent Add-on Demo")
 @SuppressWarnings("serial")
 public class DemoUI extends UI
