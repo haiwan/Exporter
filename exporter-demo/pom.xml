@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons</groupId>
 	<artifactId>exporter-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.7</version>
+	<version>1.0.0</version>
 	<name>Exporter Add-on Demo</name>
 
 	<properties>
@@ -16,25 +16,6 @@
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
 	</properties>
-
-    <!--     
-	<organization>
-		<name>My Name</name>
-		<url>https://github.com/mygithubaccount/MyComponent/</url>
-	</organization>
-    
-	<scm>
-		<url>git://github.com/mygithubaccount/MyComponent.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/MyComponent.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${ComponentClassName}.git</developerConnection>
-		<tag>MyComponent add-on for Vaadin</tag>
-	</scm>
-
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/mygithubaccount/MyComponent/issues</url>
-	</issueManagement>
-    -->
 
 	<licenses>
 		<license>
@@ -94,12 +75,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-push</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiler</artifactId>
-			<scope>provided</scope>
+			<artifactId>vaadin-client-compiled</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -197,28 +173,5 @@
 		</plugins>
 	
 	</build>
-
-	<profiles>
-		<profile>
-			<!-- Vaadin pre-release repositories -->
-			<id>vaadin-prerelease</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			
-			<repositories>
-				<repository>
-					<id>vaadin-prereleases</id>
-					<url>http://maven.vaadin.com/vaadin-prereleases</url>
-				</repository>
-			</repositories>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>vaadin-prereleases</id>
-					<url>http://maven.vaadin.com/vaadin-prereleases</url>
-				</pluginRepository>
-			</pluginRepositories>
-		</profile>
-	</profiles>
 
 </project>

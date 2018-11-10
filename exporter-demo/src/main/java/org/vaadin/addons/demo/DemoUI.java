@@ -18,14 +18,14 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-@Theme("demo")
-@Title("MyComponent Add-on Demo")
+@Theme("valo")
+@Title("Exporter Add-on Demo")
 @SuppressWarnings("serial")
 public class DemoUI extends UI
 {
 
     @WebServlet(value = "/*", asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = false, ui = DemoUI.class, widgetset = "org.vaadin.addons.demo.DemoWidgetSet")
+    @VaadinServletConfiguration(productionMode = false, ui = DemoUI.class)
     public static class Servlet extends VaadinServlet {
     }
 

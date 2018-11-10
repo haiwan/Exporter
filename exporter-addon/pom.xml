@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons</groupId>
 	<artifactId>exporter</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.7</version>
+	<version>1.0.0</version>
 	<name>Exporter</name>
 
 	<properties>
@@ -23,13 +23,6 @@
 		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
 		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
 	</properties>
-
-	<!-- <organization> <name>My Name</name> <url>https://github.com/mygithubaccount/MyComponent/</url> 
-		</organization> <scm> <url>git://github.com/mygithubaccount/MyComponent.git</url> 
-		<connection>scm:git:git://github.com/mygithubaccount/MyComponent.git</connection> 
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${ComponentClassName}.git</developerConnection> 
-		<tag>MyComponent add-on for Vaadin</tag> </scm> <issueManagement> <system>GitHub</system> 
-		<url>https://github.com/mygithubaccount/MyComponent/issues</url> </issueManagement> -->
 
 	<licenses>
 		<license>
@@ -75,12 +68,6 @@
 			<artifactId>vaadin-server</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client</artifactId>
-			<version>${vaadin.version}</version>
-			<scope>provided</scope>
-		</dependency>
 		<!-- http://mvnrepository.com/artifact/org.apache.poi/poi -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -88,16 +75,6 @@
 			<version>3.9</version>
 		</dependency>
 
-
-
-		<!-- This can be replaced with TestNG or some other test framework supported 
-			by the surefire plugin -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -124,7 +101,6 @@
 							<!-- Package format version - do not change -->
 							<Vaadin-Package-Version>1</Vaadin-Package-Version>
 							<Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
-							<Vaadin-Widgetsets>org.vaadin.addons.WidgetSet</Vaadin-Widgetsets>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -201,28 +177,5 @@
 		</resources>
 
 	</build>
-
-	<profiles>
-		<profile>
-			<!-- Vaadin pre-release repositories -->
-			<id>vaadin-prerelease</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-
-			<repositories>
-				<repository>
-					<id>vaadin-prereleases</id>
-					<url>http://maven.vaadin.com/vaadin-prereleases</url>
-				</repository>
-			</repositories>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>vaadin-prereleases</id>
-					<url>http://maven.vaadin.com/vaadin-prereleases</url>
-				</pluginRepository>
-			</pluginRepositories>
-		</profile>
-	</profiles>
 
 </project>
