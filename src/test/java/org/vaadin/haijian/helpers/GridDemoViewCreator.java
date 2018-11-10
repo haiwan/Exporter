@@ -4,6 +4,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -42,14 +44,12 @@ public class GridDemoViewCreator {
 
         final Grid<Person> grid = new Grid<>();
         grid.setPageSize(10);
+        result.setHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH, grid);
         grid.addColumn(Person::getName).setHeader("Name").setKey("name").setSortProperty("name");
         grid.addColumn(Person::getEmail).setHeader("Email").setKey("email");
         grid.addColumn(Person::getAge).setHeader("Age").setKey("age");
         grid.addColumn(new LocalDateRenderer<>(Person::getBirthday)).setHeader("Birthday").setKey("birthday");
 
-        Anchor downloadAsExcel = new Anchor(new StreamResource("my-excel.xls", Exporter.exportAsExcel(grid)), "Download As Excel");
-        Anchor downloadAsCSV = new Anchor(new StreamResource("my-csv.csv", Exporter.exportAsCSV(grid)), "Download As CSV");
-        result.add(downloadAsExcel, downloadAsCSV);
         result.add(grid);
 
         if(lazyLoading){
@@ -57,6 +57,11 @@ public class GridDemoViewCreator {
         }else{
             setupListDataProviderForGrid(grid, filter);
         }
+
+        Anchor downloadAsExcel = new Anchor(new StreamResource("my-excel.xls", Exporter.exportAsExcel(grid)), "Download As Excel");
+        Anchor downloadAsCSV = new Anchor(new StreamResource("my-csv.csv", Exporter.exportAsCSV(grid)), "Download As CSV");
+        result.add(new HorizontalLayout(downloadAsExcel, downloadAsCSV));
+
         return result;
     }
 

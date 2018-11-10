@@ -11,15 +11,18 @@ import org.vaadin.haijian.helpers.GridDemoViewCreator;
 public class DemoView extends HorizontalLayout {
 
     public DemoView() {
+        setWidth("100%");
         VerticalLayout withNormalGrid = new VerticalLayout();
+        expand(withNormalGrid);
         withNormalGrid.add(new Span("Grid With List data provider"));
         Component normalGrid = GridDemoViewCreator.createGridWithListDataProviderDemo();
         withNormalGrid.add(normalGrid);
 
-        VerticalLayout withPageableGrid = new VerticalLayout();
+        VerticalLayout withLazyLoadingGrid = new VerticalLayout();
+        expand(withLazyLoadingGrid);
         Component lazyGrid = GridDemoViewCreator.createGridWithLazyLoadingDemo();
-        withPageableGrid.add(new Span("Grid with Lazy loading data provider"));
-        withPageableGrid.add(lazyGrid);
-        add(withNormalGrid, withPageableGrid);
+        withLazyLoadingGrid.add(new Span("Grid with Lazy loading data provider"));
+        withLazyLoadingGrid.add(lazyGrid);
+        add(withNormalGrid, withLazyLoadingGrid);
     }
 }
