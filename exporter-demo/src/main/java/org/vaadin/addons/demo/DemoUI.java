@@ -32,10 +32,10 @@ public class DemoUI extends UI
         Component normalGrid = GridDemoViewCreator.createGridWithListDataProviderDemo();
         withNormalGrid.addComponent(normalGrid);
 
-        VerticalLayout withPageableGrid = new VerticalLayout();
+        VerticalLayout withLazyLoadingGrid = new VerticalLayout();
         Component lazyGrid = GridDemoViewCreator.createGridWithLazyLoadingDemo();
-        withPageableGrid.addComponent(new Label("Grid with Lazy loading data provider"));
-        withPageableGrid.addComponent(lazyGrid);
-        rootContent.addComponents(withNormalGrid, withPageableGrid);
+        withLazyLoadingGrid.addComponent(new Label("Grid with Lazy loading data provider"));
+        withLazyLoadingGrid.addComponent(lazyGrid);
+        rootContent.addComponents(withNormalGrid, withLazyLoadingGrid);
     }
 }

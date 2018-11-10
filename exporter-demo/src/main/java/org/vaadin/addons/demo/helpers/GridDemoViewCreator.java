@@ -29,6 +29,7 @@ public class GridDemoViewCreator {
 
     private static Component createGridDemo(boolean lazyLoading) {
         VerticalLayout result = new VerticalLayout();
+        result.setMargin(false);
         final List<AgeGroup> groups = new ArrayList<>();
         groups.add(new AgeGroup(0, 18));
         groups.add(new AgeGroup(19, 26));
@@ -40,10 +41,13 @@ public class GridDemoViewCreator {
 
         final Grid<Person> grid = new Grid<>();
         grid.setHeightByRows(10);
+        grid.setWidth("100%");
         grid.addColumn(Person::getName).setCaption("Name").setId("name").setSortProperty("name");
         grid.addColumn(Person::getEmail).setCaption("Email").setId("email");
         grid.addColumn(Person::getAge).setCaption("Age").setId("age");
         grid.addColumn(Person::getBirthday).setRenderer(new LocalDateRenderer()).setCaption("Birthday").setId("birthday");
+
+        result.addComponent(grid);
 
         Button downloadAsExcel = new Button("Download As Excel");
         Button downloadAsCSV = new Button("Download As CSV");
@@ -55,9 +59,7 @@ public class GridDemoViewCreator {
         StreamResource csvStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsCSV(grid), "my-csv.csv");
         FileDownloader csvFileDownloader = new FileDownloader(csvStreamResource);
         csvFileDownloader.extend(downloadAsCSV);
-
-        result.addComponents(downloadAsExcel, downloadAsCSV);
-        result.addComponent(grid);
+        result.addComponents(new HorizontalLayout(downloadAsExcel, downloadAsCSV));
 
         if(lazyLoading){
             setupLazyLoadingDataProviderForGrid(grid, filter);
