@@ -47,7 +47,7 @@ public abstract class FileBuilder<T> {
         }
     }
 
-    private boolean isExportable(Grid.Column<T> column) {
+    private boolean isExportable(Grid.Column column) {
         return column.isVisible() && column.getKey() != null && !column.getKey().isEmpty()
                 && (propertySet == null || propertySet.getProperty(column.getKey()).isPresent());
     }
@@ -122,6 +122,7 @@ public abstract class FileBuilder<T> {
     private void buildRow(T item) {
         if (propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
+            columns = columns.stream().filter(this::isExportable).collect(Collectors.toList());
         }
         if (!headerRowBuilt) {
             buildHeaderRow();
