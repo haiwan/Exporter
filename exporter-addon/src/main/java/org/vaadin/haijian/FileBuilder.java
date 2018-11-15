@@ -28,7 +28,7 @@ public abstract class FileBuilder<T> {
     private boolean headerRowBuilt = false;
 
     @SuppressWarnings("unchecked")
-    FileBuilder(Grid<T> grid) {
+    protected FileBuilder(Grid<T> grid) {
         this.grid = grid;
         columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
         if (columns.isEmpty()) {
@@ -41,7 +41,7 @@ public abstract class FileBuilder<T> {
                 && (propertySet == null || propertySet.getProperty(column.getId()).isPresent());
     }
 
-    InputStream build() {
+    protected InputStream build() {
         try {
             initTempFile();
             resetContent();
@@ -121,7 +121,11 @@ public abstract class FileBuilder<T> {
             Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getId());
             if (propertyDefinition.isPresent()) {
                 onNewCell();
-                buildCell(propertyDefinition.get().getGetter().apply(item));
+                if(column.getValueProvider() != null) {
+                    buildCell( column.getValueProvider().apply(item) );
+                } else {
+                    buildCell(propertyDefinition.get().getGetter().apply(item));
+                }
             } else {
                 throw new ExporterException("Column key: " + column.getId() + " is a property which cannot be found");
             }
@@ -167,4 +171,5 @@ public abstract class FileBuilder<T> {
         }
         return stream;
     }
+
 }

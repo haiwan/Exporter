@@ -5,8 +5,8 @@
 	<groupId>org.vaadin.haijian</groupId>
 	<artifactId>exporter</artifactId>
 	<packaging>jar</packaging>
-	<version>2.0.0</version>
-	<name>Exporter Add-on</name>
+	<version>2.0.1</version>
+	<name>Exporter</name>
 
 	<prerequisites>
 		<maven>3</maven>

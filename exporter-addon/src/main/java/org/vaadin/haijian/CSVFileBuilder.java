@@ -7,11 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class CSVFileBuilder<T> extends FileBuilder<T> {
-    private FileWriter writer;
+    protected FileWriter writer;
     private int rowNr;
     private int colNr;
 
-    CSVFileBuilder(Grid<T> grid) {
+    protected CSVFileBuilder(Grid<T> grid) {
         super(grid);
     }
 
