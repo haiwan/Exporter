@@ -24,6 +24,23 @@
 		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
 	</properties>
 
+	<organization>
+		<name>Haijian Wang</name>
+		<url>https://github.com/haiwan/Exporter</url>
+	</organization>
+
+	<scm>
+		<url>https://github.com/haiwan/Exporter</url>
+		<connection>scm:git:git://github.com/mygithubaccount/Exporter.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:/haiwan/Exporter.git</developerConnection>
+		<tag>Exporter add-on for Vaadin</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/haiwan/Exporter/issues</url>
+	</issueManagement>
+
 	<licenses>
 		<license>
 			<name>Apache 2</name>
