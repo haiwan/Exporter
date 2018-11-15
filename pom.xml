@@ -3,9 +3,9 @@
 
     <groupId>org.vaadin.haijian</groupId>
     <artifactId>exporter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <name>Exporter</name>
-    <description>Integration of paper-slider for Vaadin 11</description>
+    <description>A simple tool for exporting data from Grid to Excel or CSV</description>
 
     <properties>
         <vaadin.version>11.0.0</vaadin.version>
