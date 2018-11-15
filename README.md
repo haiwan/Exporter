@@ -1,9 +1,9 @@
 [![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/exporter)
 [![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/exporter.svg)](https://vaadin.com/directory/component/exporter)
 
-# Exporter Add-on for Vaadin 7
+# Exporter Add-on for Vaadin 8
 
-Exporter is a Data component add-on for Vaadin 7.
+Exporter is a simple tool for exporting data in Grid to Excel or CSV.
 
 ## Online demo
 
@@ -22,14 +22,6 @@ mvn jetty:run
 
 To see the demo, navigate to http://localhost:8080/
 
-## Development with Eclipse IDE
-
-For further development of this add-on, the following tool-chain is recommended:
-- Eclipse IDE
-- m2e wtp plug-in (install it from Eclipse Marketplace)
-- Vaadin Eclipse plug-in (install it from Eclipse Marketplace)
-- JRebel Eclipse plug-in (install it from Eclipse Marketplace)
-- Chrome browser
 
 ### Importing project
 
@@ -44,23 +36,7 @@ If you have not already compiled the widgetset, do it now by running vaadin:inst
 If you have a JRebel license, it makes on the fly code changes faster. Just add JRebel nature to your exporter-demo project by clicking project with right mouse button and choosing JRebel > Add JRebel Nature
 
 To debug project and make code modifications on the fly in the server-side, right-click the exporter-demo project and choose Debug As > Debug on Server. Navigate to http://localhost:8080/exporter-demo/ to see the application.
-
-### Debugging client-side
-
-Debugging client side code in the exporter-demo project:
-  - run "mvn vaadin:run-codeserver" on a separate console while the application is running
-  - activate Super Dev Mode in the debug window of the application or by adding ?superdevmode to the URL
-  - You can access Java-sources and set breakpoints inside Chrome if you enable source maps from inspector settings.
  
-## Release notes
-
-### Version 0.0.6
-- ...
-- ...
-
-## Roadmap
-
-This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases. 
 
 ## Issue tracking
 
@@ -80,7 +56,7 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-MyComponent is written by Haijian Wang
+Exporter is written by Haijian Wang
 
 # Developer Guide
 
@@ -88,20 +64,7 @@ MyComponent is written by Haijian Wang
 
 Here is a simple example on how to try out the add-on component:
 
-ExcelExporter excelExporter = new ExcelExporter();
-excelExporter.setDateFormat("yyyy-MM-dd");
-excelExporter.setTableToBeExported(sampleTable);
-excelExporter.setCaption("Export to Excel");
-layout.addComponent(excelExporter);
-
-For a more comprehensive example, see exporter-demo org.vaadin.addons.demo.DemoUI.java
-
-## Features
-
-### Feature A
-
-export data to excel file
-
-### Feature B
-
-export data to csv file
+Button downloadAsExcel = new Button("Download As Excel");
+StreamResource excelStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid), "my-excel.xls");
+FileDownloader excelFileDownloader = new FileDownloader(excelStreamResource);
+excelFileDownloader.extend(downloadAsExcel);
