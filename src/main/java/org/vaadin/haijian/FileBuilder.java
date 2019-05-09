@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,13 +25,15 @@ public abstract class FileBuilder<T> {
 
     File file;
     private Grid<T> grid;
+    private Map<Grid.Column<T>, String> columnHeaders;
     private Collection<Grid.Column> columns;
     private PropertySet<T> propertySet;
     private boolean headerRowBuilt = false;
 
     @SuppressWarnings("unchecked")
-    FileBuilder(Grid<T> grid) {
+    FileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders) {
         this.grid = grid;
+        this.columnHeaders = columnHeaders;
         columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
         try {
             Field field = Grid.class.getDeclaredField("propertySet");
@@ -80,6 +83,7 @@ public abstract class FileBuilder<T> {
     }
 
     private void buildHeaderRow() {
+      if (columnHeaders == null) {
         columns.forEach(column -> {
             Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getKey());
             if (propertyDefinition.isPresent()) {
@@ -89,7 +93,18 @@ public abstract class FileBuilder<T> {
                 LoggerFactory.getLogger(this.getClass()).warn(String.format("Column key %s is a property which cannot be found", column.getKey()));
             }
         });
-        headerRowBuilt = true;
+      } else {
+        columns.forEach(column -> { 
+          String columnHeader = columnHeaders.get(column);
+          if (columnHeader != null) {
+            onNewCell();
+            buildColumnHeaderCell(columnHeader);
+          } else {
+              LoggerFactory.getLogger(this.getClass()).warn(String.format("Column with key %s have not column header value defined in map", column.getKey()));
+          }
+        });
+      }
+      headerRowBuilt = true;
     }
 
 

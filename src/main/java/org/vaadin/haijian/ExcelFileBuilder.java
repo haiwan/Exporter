@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.util.Calendar;
+import java.util.Map;
 
 public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private static final String EXCEL_FILE_EXTENSION = ".xls";
@@ -19,8 +20,8 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private Cell cell;
     private CellStyle boldStyle;
 
-    ExcelFileBuilder(Grid<T> grid) {
-        super(grid);
+    ExcelFileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders) {
+        super(grid, columnHeaders);
     }
 
     @Override
