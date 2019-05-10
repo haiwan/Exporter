@@ -58,7 +58,7 @@ public class GridDemoViewCreator {
             setupListDataProviderForGrid(grid, filter);
         }
 
-        Anchor downloadAsExcel = new Anchor(new StreamResource("my-excel.xlsx", Exporter.exportAsXlsx(grid)), "Download As Excel");
+        Anchor downloadAsExcel = new Anchor(new StreamResource("my-excel.xlsx", Exporter.exportAsExcel(grid)), "Download As Excel");
         Anchor downloadAsCSV = new Anchor(new StreamResource("my-csv.csv", Exporter.exportAsCSV(grid)), "Download As CSV");
         result.add(new HorizontalLayout(downloadAsExcel, downloadAsCSV));
 

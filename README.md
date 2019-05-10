@@ -1,15 +1,15 @@
 # Exporter
 
-Allows you to export data from Grid to an Excel(.xls or .xlsx) or CSV file
+Allows you to export data from Grid to an Excel(.xls or .xlsx, default is xlsx) or CSV file
 ```
+Exporter.exportAsExcel(grid));
 Exporter.exportAsXls(grid));
-Exporter.exportAsXlsx(grid));
 Exporter.exportAsCSV(grid))
 ```
 
 A typical use case is to let user download the generated file, an Anchor component can be used for such a purpose.
 ```
-new Anchor(new StreamResource("my-excel.xlsx", Exporter.exportAsXlsx(grid)), "Download As Excel");
+new Anchor(new StreamResource("my-excel.xlsx", Exporter.exportAsExcel(grid)), "Download As Excel");
 ```
 
 ## Use instructions

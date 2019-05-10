@@ -8,15 +8,11 @@ public class Exporter {
     private Exporter(){}
 
     public static <T> InputStreamFactory exportAsExcel(Grid<T> grid){
-        return new ExcelFileBuilder<>(grid)::build;
+        return new XlsxFileBuilder<>(grid)::build;
     }
 
     public static <T> InputStreamFactory exportAsXls(Grid<T> grid){
         return new XlsFileBuilder<>(grid)::build;
-    }
-
-    public static <T> InputStreamFactory exportAsXlsx(Grid<T> grid){
-        return new XlsxFileBuilder<>(grid)::build;
     }
 
     public static <T> InputStreamFactory exportAsCSV(Grid<T> grid){
