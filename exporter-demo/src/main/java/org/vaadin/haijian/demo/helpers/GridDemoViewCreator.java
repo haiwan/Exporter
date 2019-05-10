@@ -52,7 +52,7 @@ public class GridDemoViewCreator {
         Button downloadAsExcel = new Button("Download As Excel");
         Button downloadAsCSV = new Button("Download As CSV");
 
-        StreamResource excelStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid), "my-excel.xls");
+        StreamResource excelStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsXlsx(grid), "my-excel.xlsx");
         FileDownloader excelFileDownloader = new FileDownloader(excelStreamResource);
         excelFileDownloader.extend(downloadAsExcel);
 

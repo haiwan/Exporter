@@ -12,6 +12,14 @@ public class Exporter {
         return new ExcelFileBuilder<>(grid).build();
     }
 
+    public static <T> InputStream exportAsXls(Grid<T> grid){
+        return new XlsFileBuilder<>(grid).build();
+    }
+
+    public static <T> InputStream exportAsXlsx(Grid<T> grid){
+        return new XlsxFileBuilder<>(grid).build();
+    }
+
     public static <T> InputStream exportAsCSV(Grid<T> grid){
         return new CSVFileBuilder<>(grid).build();
     }
