@@ -2,6 +2,7 @@ package org.vaadin.haijian;
 
 import com.vaadin.ui.Grid;
 import org.slf4j.LoggerFactory;
+import org.vaadin.haijian.option.ExporterOption;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,8 +12,8 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
     private int rowNr;
     private int colNr;
 
-    CSVFileBuilder(Grid<T> grid) {
-        super(grid);
+    CSVFileBuilder(Grid<T> grid, ExporterOption option) {
+        super(grid, option);
     }
 
     @Override

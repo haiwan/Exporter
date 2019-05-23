@@ -9,6 +9,8 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.LocalDateRenderer;
 import org.vaadin.haijian.Exporter;
+import org.vaadin.haijian.option.ColumnOption;
+import org.vaadin.haijian.option.ExporterOption;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,6 +54,9 @@ public class GridDemoViewCreator {
         Button downloadAsExcel = new Button("Download As Excel");
         Button downloadAsCSV = new Button("Download As CSV");
 
+        Button downloadAsExcelWithCustomHeader = new Button("Download As Excel With Custom Header");
+        Button downloadAsCSVWithCustomHeader = new Button("Download As CSV With Custom Header");
+
         StreamResource excelStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid), "my-excel.xlsx");
         FileDownloader excelFileDownloader = new FileDownloader(excelStreamResource);
         excelFileDownloader.extend(downloadAsExcel);
@@ -59,7 +64,23 @@ public class GridDemoViewCreator {
         StreamResource csvStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsCSV(grid), "my-csv.csv");
         FileDownloader csvFileDownloader = new FileDownloader(csvStreamResource);
         csvFileDownloader.extend(downloadAsCSV);
-        result.addComponents(new HorizontalLayout(downloadAsExcel, downloadAsCSV));
+
+
+        ExporterOption exporterOption = new ExporterOption();
+        exporterOption.getColumnOption("name").columnName("My Name").toUpperCase();
+        exporterOption.getColumnOption("email").columnName("My Email");
+        exporterOption.getColumnOption("age").toUpperCase();
+
+        StreamResource excelStreamResourceWithCustomHeader = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid, exporterOption), "my-excel-with-cutom-header.xlsx");
+        FileDownloader excelFileDownloaderWithCustomHeader = new FileDownloader(excelStreamResourceWithCustomHeader);
+        excelFileDownloaderWithCustomHeader.extend(downloadAsExcelWithCustomHeader);
+
+        StreamResource csvStreamResourceWithCustomHeader = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsCSV(grid, exporterOption), "my-csv-with-custom-header.csv");
+        FileDownloader csvFileDownloaderWithCustomHeader = new FileDownloader(csvStreamResourceWithCustomHeader);
+        csvFileDownloaderWithCustomHeader.extend(downloadAsCSVWithCustomHeader);
+
+
+        result.addComponents(new HorizontalLayout(downloadAsExcel, downloadAsCSV, downloadAsExcelWithCustomHeader, downloadAsCSVWithCustomHeader));
 
         if(lazyLoading){
             setupLazyLoadingDataProviderForGrid(grid, filter);
