@@ -4,6 +4,7 @@ import com.vaadin.ui.Grid;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.LoggerFactory;
+import org.vaadin.haijian.option.ExporterOption;
 
 import java.io.FileOutputStream;
 import java.util.Calendar;
@@ -20,8 +21,8 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private Cell cell;
     private CellStyle boldStyle;
 
-    ExcelFileBuilder(Grid<T> grid) {
-        super(grid);
+    ExcelFileBuilder(Grid<T> grid, ExporterOption option) {
+        super(grid, option);
     }
 
     @Override
