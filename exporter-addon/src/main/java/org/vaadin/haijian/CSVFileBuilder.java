@@ -30,13 +30,13 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
     @Override
     protected void buildCell(Object value) {
         try {
-            if(value == null){
+            if (value == null) {
                 writer.append("");
-            }else {
+            } else {
                 writer.append(value.toString());
             }
         } catch (IOException e) {
-            LoggerFactory.getLogger(this.getClass()).error("Error building cell "+value, e);
+            LoggerFactory.getLogger(this.getClass()).error("Error building cell " + value, e);
         }
     }
 
@@ -56,12 +56,12 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
         }
     }
 
-    private void cleanupResource(){
-        try{
-            if(writer!=null){
+    private void cleanupResource() {
+        try {
+            if (writer != null) {
                 writer.close();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             LoggerFactory.getLogger(this.getClass()).error("Unable to close the writer for CSV file", e);
         }
     }
