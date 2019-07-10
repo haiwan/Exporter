@@ -18,10 +18,10 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private int rowNr;
     private int colNr;
     private Row row;
-    private Cell cell;
+    protected Cell cell;
     private CellStyle boldStyle;
-
-    ExcelFileBuilder(Grid<T> grid, ExporterOption option) {
+  
+    protected ExcelFileBuilder(Grid<T> grid, ExporterOption option) {
         super(grid, option);
     }
 
