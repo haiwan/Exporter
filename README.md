@@ -65,6 +65,6 @@ Exporter is written by Haijian Wang
 Here is a simple example on how to try out the add-on component:
 
 Button downloadAsExcel = new Button("Download As Excel");
-StreamResource excelStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid), "my-excel.xls");
+StreamResource excelStreamResource = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid), "my-excel.xlsx");
 FileDownloader excelFileDownloader = new FileDownloader(excelStreamResource);
 excelFileDownloader.extend(downloadAsExcel);

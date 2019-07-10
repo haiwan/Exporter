@@ -4,9 +4,11 @@ import com.vaadin.ui.Grid;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.LoggerFactory;
+import org.vaadin.haijian.option.ExporterOption;
 
 import java.io.FileOutputStream;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private static final String EXCEL_FILE_EXTENSION = ".xls";
@@ -18,9 +20,9 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private Row row;
     protected Cell cell;
     private CellStyle boldStyle;
-
-    protected ExcelFileBuilder(Grid<T> grid) {
-        super(grid);
+  
+    protected ExcelFileBuilder(Grid<T> grid, ExporterOption option) {
+        super(grid, option);
     }
 
     @Override
@@ -53,20 +55,17 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     @Override
     protected void buildCell(Object value) {
         if (value == null) {
-            cell.setCellType(Cell.CELL_TYPE_BLANK);
+            cell.setBlank();
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
-            cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
         } else if (value instanceof Calendar) {
-            Calendar calendar = (Calendar) value;
-            cell.setCellValue(calendar.getTime());
-            cell.setCellType(Cell.CELL_TYPE_STRING);
+            cell.setCellValue((Calendar) value);
+        } else if (value instanceof Date) {
+            cell.setCellValue((Date) value);
         } else if (value instanceof Double) {
             cell.setCellValue((Double) value);
-            cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         } else {
             cell.setCellValue(value.toString());
-            cell.setCellType(Cell.CELL_TYPE_STRING);
         }
     }
 
@@ -79,7 +78,7 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private CellStyle getBoldStyle() {
         if (boldStyle == null) {
             Font bold = workbook.createFont();
-            bold.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            bold.setBold(true);
 
             boldStyle = workbook.createCellStyle();
             boldStyle.setFont(bold);
@@ -96,12 +95,16 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
 
     @Override
     protected void resetContent() {
-        workbook = new HSSFWorkbook();
+        workbook = createWorkbook();
         sheet = workbook.createSheet();
         colNr = 0;
         rowNr = 0;
         row = null;
         cell = null;
         boldStyle = null;
+    }
+
+    protected Workbook createWorkbook() {
+        return new HSSFWorkbook();
     }
 }

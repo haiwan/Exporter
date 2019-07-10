@@ -7,6 +7,8 @@ import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.Query;
 import com.vaadin.ui.Grid;
 import org.slf4j.LoggerFactory;
+import org.vaadin.haijian.option.ColumnOption;
+import org.vaadin.haijian.option.ExporterOption;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,14 +28,15 @@ public abstract class FileBuilder<T> {
     private Collection<Grid.Column> columns;
     private PropertySet<T> propertySet;
     private boolean headerRowBuilt = false;
+    private ExporterOption option;
 
-    @SuppressWarnings("unchecked")
-    protected FileBuilder(Grid<T> grid) {
+    protected FileBuilder(Grid<T> grid, ExporterOption option) {
         this.grid = grid;
         columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
         if (columns.isEmpty()) {
             throw new ExporterException("No exportable column found, did you remember to set property name as the key for column");
         }
+        this.option = option;
     }
 
     private boolean isExportable(Grid.Column column) {
@@ -73,14 +76,26 @@ public abstract class FileBuilder<T> {
             Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getId());
             if (propertyDefinition.isPresent()) {
                 onNewCell();
-                buildColumnHeaderCell(propertyDefinition.get().getCaption());
+                buildColumnHeaderCell(getColumnHeader(propertyDefinition.get()));
             } else {
-                LoggerFactory.getLogger(this.getClass()).warn(String.format("Column key %s is a property which cannot be found", column.getId()));
+                LoggerFactory.getLogger(this.getClass()).warn(String.format("Column id %s is a property which cannot be found", column.getId()));
             }
         });
         headerRowBuilt = true;
     }
 
+
+    private String getColumnHeader(PropertyDefinition<T, ?> propertyDefinition){
+        ColumnOption columnOption = option.getColumnOption(propertyDefinition.getName());
+        String columnName = columnOption.getColumnName();
+        if(columnName==null){
+            columnName = propertyDefinition.getCaption();
+        }
+        if(columnOption.isUpperCase()){
+            columnName = columnName.toUpperCase();
+        }
+        return columnName;
+    }
 
     void buildColumnHeaderCell(String header) {
 
@@ -127,7 +142,7 @@ public abstract class FileBuilder<T> {
                     buildCell(propertyDefinition.get().getGetter().apply(item));
                 }
             } else {
-                throw new ExporterException("Column key: " + column.getId() + " is a property which cannot be found");
+                throw new ExporterException("Column id: " + column.getId() + " is a property which cannot be found");
             }
         });
     }
