@@ -5,14 +5,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 public class CSVFileBuilder<T> extends FileBuilder<T> {
     private FileWriter writer;
     private int rowNr;
     private int colNr;
 
-    CSVFileBuilder(Grid<T> grid) {
-        super(grid);
+    CSVFileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders) {
+        super(grid, columnHeaders);
     }
 
     @Override
