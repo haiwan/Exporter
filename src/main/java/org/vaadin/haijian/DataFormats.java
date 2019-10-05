@@ -1,25 +1,24 @@
 package org.vaadin.haijian;
 
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
-import java.time.LocalDate;
 
+/**
+ * 
+ * @author Krunoslav Magazin
+ * Oct 5, 2019
+ */
 public interface DataFormats {
 
     void numberFormat(Class<? extends Number> clazz, String format);
 
-    void localDateTimeFormat(Class<? extends LocalDateTime> clazz, String format);
+    void localDateTimeFormat( String format);
 
-    void localDateFormat(Class<? extends LocalDate> clazz, String format);
+    void localDateFormat( String format);
     
-    void calendarFormat(Class<? extends Calendar> clazz, String format);
+    void calendarFormat( String format);
     
-    void dateFormat(Class<? extends Date> clazz, String format);
+    void dateFormat( String format);
     
     public Map<Class<?>, String> getTypeFormatsMap();
-
-
 
 }

@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -21,6 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.flow.component.grid.Grid;
 
+/**
+ * 
+ * Modified Oct 5, 2019 by Krunoslav Magazin - added data formats and type
+ * conversion
+ * 
+ */
 public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private static final String EXCEL_FILE_EXTENSION = ".xls";
 
@@ -113,23 +117,11 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     }
 
     protected void buildNumericCell(Number value) {
-
         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 
-        if (value instanceof Double) {
-            cell.setCellValue((Double) value);
-
-        } else if (value instanceof Long) {
-            cell.setCellValue((Long) value);
-
-        } else if (value instanceof Integer) {
-            cell.setCellValue((Integer) value);
-
-        } else if (value instanceof BigDecimal) {
+        if (value instanceof BigDecimal) {
             cell.setCellValue(((BigDecimal) value).doubleValue());
-
         } else {
-            // TODO - this convesrion
             cell.setCellValue(value.doubleValue());
         }
 

@@ -8,6 +8,11 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 
+/**
+ * 
+ * @author Krunoslav Magazin
+ * Oct 5, 2019
+ */
 public class WorkbookStyles {
 
     private final Map<Class<?>, CellStyle> stylesWithDataFormats;

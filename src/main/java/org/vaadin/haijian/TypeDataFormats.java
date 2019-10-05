@@ -8,6 +8,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+
+/**
+ * 
+ * @author Krunoslav Magazin
+ * Oct 5, 2019
+ * 
+ * Initialize default excel formats. Excel {@link BuiltinFormats} use locale to format value.</p>
+ * 
+ */
 public class TypeDataFormats implements DataFormats {
 
     private final Map<Class<?>, String> typeFormatsMap;
@@ -30,23 +40,23 @@ public class TypeDataFormats implements DataFormats {
     }
 
     @Override
-    public void localDateTimeFormat(Class<? extends LocalDateTime> clazz, String format) {
-        setTypeFormat(clazz, format);
+    public void localDateTimeFormat( String format) {
+        setTypeFormat(LocalDateTime.class, format);
     }
 
     @Override
-    public void localDateFormat(Class<? extends LocalDate> clazz, String format) {
-        setTypeFormat(clazz, format);
+    public void localDateFormat( String format) {
+        setTypeFormat(LocalDate.class, format);
     }
 
     @Override
-    public void calendarFormat(Class<? extends Calendar> clazz, String format) {
-        setTypeFormat(clazz, format);
+    public void calendarFormat( String format) {
+        setTypeFormat(Calendar.class, format);
     }
 
     @Override
-    public void dateFormat(Class<? extends Date> clazz, String format) {
-        setTypeFormat(clazz, format);
+    public void dateFormat( String format) {
+        setTypeFormat(Date.class, format);
     }
 
     private void setTypeFormat(Class<?> clazz, String format) {

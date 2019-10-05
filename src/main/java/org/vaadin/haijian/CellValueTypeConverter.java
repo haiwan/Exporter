@@ -8,6 +8,11 @@ import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
 
+/**
+ * 
+ * @author Krunoslav Magazin
+ * Oct 5, 2019
+ */
 public class CellValueTypeConverter {
 
     public void setValue(Cell cell, LocalDateTime localDateTime) {
