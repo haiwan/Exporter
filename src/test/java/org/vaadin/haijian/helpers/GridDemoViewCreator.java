@@ -115,7 +115,7 @@ public class GridDemoViewCreator {
         customHeaderCaptions.put(grid.getColumnByKey("birthday"), "Day of birth");
 
         Anchor downloadAsExcel = new Anchor(new StreamResource("my-excel.xls", Exporter.exportAsExcel(grid, customHeaderCaptions)), "Download As Excel");
-        Anchor downloadAsCSV = new Anchor(new StreamResource("my-csv.csv", Exporter.exportAsCSV(grid)), "Download As CSV");
+        Anchor downloadAsCSV = new Anchor(new StreamResource("my-csv.csv", Exporter.exportAsCSV(grid, customHeaderCaptions)), "Download As CSV");
         result.add(new HorizontalLayout(downloadAsExcel, downloadAsCSV));
 
         return result;
