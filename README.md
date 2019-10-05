@@ -33,8 +33,17 @@ private Map<Column<MyEntity>, String> gridHeaderMap;
 ...
 Exporter.exportAsExcel(grid, gridHeaderMap)
 ```
-
 Exporter works as using reflection to read property from each item, any column without a valid key will be ignored.
+ 
+### Data formats, excel builtin and custom
+
+By default excel exporter will use default excel data formats for date, time and numbers. To set custom formats:
+```
+TypeDataFormats formats = new TypeDataFormats();
+formats.localDateFormat("DDD-MMM-YY");
+Exporter.exportAsExcel(grid, gridHeaderMap, formats);
+```
+
 
 ## Development instructions
 
