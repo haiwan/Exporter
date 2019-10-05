@@ -35,7 +35,7 @@ Exporter.exportAsExcel(grid, gridHeaderMap)
 ```
 Exporter works as using reflection to read property from each item, any column without a valid key will be ignored.
  
-### Data formats, excel builtin and custom
+### Data formats, excel builtin and custom data formats
 
 By default excel exporter will use default excel data formats for date, time and numbers. To set custom formats:
 ```
