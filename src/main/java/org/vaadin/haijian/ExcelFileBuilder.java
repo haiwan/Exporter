@@ -1,13 +1,25 @@
 package org.vaadin.haijian;
 
-import com.vaadin.flow.component.grid.Grid;
+import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileOutputStream;
-import java.util.Calendar;
-import java.util.Map;
+import com.vaadin.flow.component.grid.Grid;
 
 public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private static final String EXCEL_FILE_EXTENSION = ".xls";
@@ -20,8 +32,30 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
     private Cell cell;
     private CellStyle boldStyle;
 
+    private DataFormats dataFormats;
+    private CellValueTypeConverter converter;
+    private WorkbookStyles styles;
+
     ExcelFileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders) {
         super(grid, columnHeaders);
+        this.dataFormats = new TypeDataFormats();
+        this.converter = new CellValueTypeConverter();
+    }
+
+    ExcelFileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders, DataFormats dataFormats) {
+        this(grid, columnHeaders);
+        this.dataFormats = dataFormats;
+    }
+
+    ExcelFileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders, CellValueTypeConverter converter) {
+        this(grid, columnHeaders);
+        this.converter = converter;
+    }
+
+    ExcelFileBuilder(Grid<T> grid, Map<Grid.Column<T>, String> columnHeaders, DataFormats dataFormats,
+            CellValueTypeConverter converter) {
+        this(grid, columnHeaders, dataFormats);
+        this.converter = converter;
     }
 
     @Override
@@ -58,17 +92,49 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
             cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
+        } else if (value instanceof Number) {
+            buildNumericCell((Number) value);
         } else if (value instanceof Calendar) {
-            Calendar calendar = (Calendar) value;
-            cell.setCellValue(calendar.getTime());
-            cell.setCellType(Cell.CELL_TYPE_STRING);
-        } else if (value instanceof Double) {
-            cell.setCellValue((Double) value);
-            cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+            converter.setValue(cell, (Calendar) value);
+        } else if (value instanceof Date) {
+            Date date = (Date) value;
+            cell.setCellValue(date);
+        } else if (value instanceof LocalDate) {
+            converter.setValue(cell, (LocalDate) value);
+        } else if (value instanceof LocalDateTime) {
+            converter.setValue(cell, (LocalDateTime) value);
         } else {
             cell.setCellValue(value.toString());
             cell.setCellType(Cell.CELL_TYPE_STRING);
         }
+
+        styles.setStyle(cell, value.getClass());
+
+    }
+
+    protected void buildNumericCell(Number value) {
+
+        cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+
+        if (value instanceof Double) {
+            cell.setCellValue((Double) value);
+
+        } else if (value instanceof Long) {
+            cell.setCellValue((Long) value);
+
+        } else if (value instanceof Integer) {
+            cell.setCellValue((Integer) value);
+
+        } else if (value instanceof BigDecimal) {
+            cell.setCellValue(((BigDecimal) value).doubleValue());
+
+        } else {
+            // TODO - this convesrion
+            cell.setCellValue(value.doubleValue());
+        }
+
+        styles.setStyle(cell, value.getClass());
+
     }
 
     @Override
@@ -104,5 +170,11 @@ public class ExcelFileBuilder<T> extends FileBuilder<T> {
         row = null;
         cell = null;
         boldStyle = null;
+
+        createCellStyleDataFormats();
+    }
+
+    private void createCellStyleDataFormats() {
+        styles = new WorkbookStyles(workbook, dataFormats);
     }
 }
