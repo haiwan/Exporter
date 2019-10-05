@@ -39,7 +39,7 @@ Exporter works as using reflection to read property from each item, any column w
 
 By default excel exporter will use default excel data formats for date, time and numbers. To set custom formats:
 ```
-TypeDataFormats formats = new TypeDataFormats();
+DataFormats formats = new TypeDataFormats();
 formats.localDateFormat("DDD-MMM-YY");
 Exporter.exportAsExcel(grid, gridHeaderMap, formats);
 ```
