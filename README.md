@@ -38,7 +38,7 @@ Exporter.exportAsExcel(grid, gridHeaderMap)
 
 In case when grid is created without bean type (adding columns with value providers) then map with column headers is mandatory. 
  
-### Data formats, excel builtin and custom data formats
+### Data formats, excel built-in and custom data formats
 
 By default excel exporter will use default excel data formats for date, time and numbers. To set custom formats:
 ```
