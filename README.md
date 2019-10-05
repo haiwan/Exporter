@@ -26,7 +26,7 @@ grid.addColumn(Person::getEmail).setKey("email");
 
 ### Custom column header text
 
-Create map where Column is key and header text is value. Pass that map as argument to Exporter subclass constructor.
+When grid is created with bean type create map where Column is key and header text is value. Pass that map as argument to Exporter subclass constructor.
 If map is null then default column key will be used for creating column header in excel.
 ```
 private Map<Column<MyEntity>, String> gridHeaderMap;
@@ -34,6 +34,7 @@ private Map<Column<MyEntity>, String> gridHeaderMap;
 Exporter.exportAsExcel(grid, gridHeaderMap)
 ```
 Exporter works as using reflection to read property from each item, any column without a valid key will be ignored.
+In case when grid is created without bean type (adding columns with value providers) then map with column headers is mandatory. 
  
 ### Data formats, excel builtin and custom data formats
 
