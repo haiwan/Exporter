@@ -28,7 +28,7 @@ grid.addColumn(Person::getEmail).setKey("email");
 
 Exporter works as using reflection to read property from each item, any column without a valid key will be ignored.
 
-When grid is created with bean type create map where Column is key and header text is value. Pass that map as argument to Exporter subclass constructor.
+When grid is created using bean type create map where Column is key and header text is value. Pass that map as argument to Exporter subclass constructor.
 If map is null then default column key will be used for creating column header in excel.
 ```
 private Map<Column<MyEntity>, String> gridHeaderMap;
