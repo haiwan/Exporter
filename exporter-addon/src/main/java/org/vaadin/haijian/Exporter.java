@@ -24,6 +24,7 @@ public abstract class Exporter extends Button implements StreamSource {
         fileDownloader = new FileDownloader(new StreamResource(this,
                 getDownloadFileName()));
         fileDownloader.extend(this);
+        ((StreamResource) fileDownloader.getFileDownloadResource()).setCacheTime(0);
     }
 
     public Exporter(Table table) {
@@ -62,6 +63,8 @@ public abstract class Exporter extends Button implements StreamSource {
 		if (dateFormatString != null) {
 			fileBuilder.setDateFormat(dateFormatString);
 		}
+		
+		setDownloadFileName(getDownloadFileName());
 	}
 
     public void setVisibleColumns(Object[] visibleColumns) {
@@ -87,6 +90,8 @@ public abstract class Exporter extends Button implements StreamSource {
     protected abstract FileBuilder createFileBuilder(Container container);
 
     protected abstract String getDownloadFileName();
+
+	protected abstract String getDefaultDownloadFileName();
     
     public void setDownloadFileName(String fileName){
     	downloadFileName = fileName;

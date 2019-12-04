@@ -2,10 +2,16 @@ package org.vaadin.haijian;
 
 import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.vaadin.haijian.filegenerator.ExcelFileBuilder;
 import org.vaadin.haijian.filegenerator.FileBuilder;
 
 public class ExcelExporter extends Exporter {
+	private SimpleDateFormat fileDateTimeFmt = null;
+	
     public ExcelExporter() {
         super();
     }
@@ -26,16 +32,27 @@ public class ExcelExporter extends Exporter {
     protected FileBuilder createFileBuilder(Container container) {
         return new ExcelFileBuilder(container);
     }
+    
+    private SimpleDateFormat getDateTimeFmt() {
+    	if( !( fileDateTimeFmt instanceof SimpleDateFormat ))
+    		fileDateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
+    	return fileDateTimeFmt;
+    }
 
+    @Override
+    protected String getDefaultDownloadFileName() {
+		return "exported-excel-" + getDateTimeFmt().format(new Date()) + ".xls";
+	}
+    
     @Override
     protected String getDownloadFileName() {
     	if(downloadFileName == null){
-    		return "exported-excel.xls";
+    		return getDefaultDownloadFileName();
         }
     	if(downloadFileName.endsWith(".xls")){
     		return downloadFileName;
     	}else{
-    		return downloadFileName + ".xls";
+    		return downloadFileName + "-" + getDateTimeFmt().format(new Date()) + ".xls";
     	}
     }
 }
