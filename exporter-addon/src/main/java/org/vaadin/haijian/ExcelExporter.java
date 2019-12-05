@@ -3,14 +3,12 @@ package org.vaadin.haijian;
 import com.vaadin.data.Container;
 import com.vaadin.ui.Table;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.vaadin.haijian.filegenerator.ExcelFileBuilder;
 import org.vaadin.haijian.filegenerator.FileBuilder;
 
 public class ExcelExporter extends Exporter {
-	private SimpleDateFormat fileDateTimeFmt = null;
 	
     public ExcelExporter() {
         super();
@@ -31,12 +29,6 @@ public class ExcelExporter extends Exporter {
     @Override
     protected FileBuilder createFileBuilder(Container container) {
         return new ExcelFileBuilder(container);
-    }
-    
-    private SimpleDateFormat getDateTimeFmt() {
-    	if( !( fileDateTimeFmt instanceof SimpleDateFormat ))
-    		fileDateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
-    	return fileDateTimeFmt;
     }
 
     @Override

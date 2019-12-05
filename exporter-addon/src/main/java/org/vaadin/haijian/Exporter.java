@@ -3,6 +3,7 @@ package org.vaadin.haijian;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Container;
@@ -19,6 +20,7 @@ public abstract class Exporter extends Button implements StreamSource {
     private Locale locale;
     private String dateFormatString;
     protected String downloadFileName;
+    private SimpleDateFormat fileDateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public Exporter() {
         fileDownloader = new FileDownloader(new StreamResource(this,
@@ -106,5 +108,12 @@ public abstract class Exporter extends Button implements StreamSource {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    
+    protected SimpleDateFormat getDateTimeFmt() {
+    	if( fileDateTimeFmt == null )
+    		fileDateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
+    	return fileDateTimeFmt;
     }
 }
