@@ -48,11 +48,11 @@ public class DemoUI extends UI
             final ExcelExporter excelExporter = new ExcelExporter();
             excelExporter.setDateFormat("yyyy-MM-dd");
             excelExporter.setTableToBeExported(sampleTable);
-            excelExporter.setCaption("Export to Excel");
+            excelExporter.setCaption("Export to Excel (no date)");
             layout.addComponent(excelExporter);
             
             final CSVExporter csvExporter = new CSVExporter();
-            csvExporter.setCaption("Export to CSV");
+            csvExporter.setCaption("Export to CSV (no date)");
             csvExporter.setContainerToBeExported(sampleTable
                                                  .getContainerDataSource());
             csvExporter.setVisibleColumns(sampleTable.getVisibleColumns());
@@ -60,6 +60,22 @@ public class DemoUI extends UI
             
             excelExporter.setDownloadFileName("demo-excel-exporter.xls");
             csvExporter.setDownloadFileName("demo-csv-exporter.csv");
+            
+            final ExcelExporter excelExporter2 = new ExcelExporter();
+            excelExporter2.setDateFormat("yyyy-MM-dd");
+            excelExporter2.setTableToBeExported(sampleTable);
+            excelExporter2.setCaption("Export to Excel (with date)");
+            layout.addComponent(excelExporter2);
+            
+            final CSVExporter csvExporter2 = new CSVExporter();
+            csvExporter2.setCaption("Export to CSV (with date)");
+            csvExporter2.setContainerToBeExported(sampleTable
+                                                 .getContainerDataSource());
+            csvExporter2.setVisibleColumns(sampleTable.getVisibleColumns());
+            layout.addComponent(csvExporter2);
+            
+            excelExporter2.setDownloadFileName("demo-excel-exporter");
+            csvExporter2.setDownloadFileName("demo-csv-exporter");
             
             addData.addClickListener(new ClickListener() {
 				
@@ -72,6 +88,8 @@ public class DemoUI extends UI
 					
 					excelExporter.setTableToBeExported(sampleTable);
 		            csvExporter.setContainerToBeExported(sampleTable.getContainerDataSource());
+		            excelExporter2.setTableToBeExported(sampleTable);
+		            csvExporter2.setContainerToBeExported(sampleTable.getContainerDataSource());
 				}
 			});
         } catch (UnsupportedOperationException e) {
