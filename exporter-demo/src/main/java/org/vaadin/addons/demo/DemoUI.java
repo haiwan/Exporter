@@ -1,5 +1,7 @@
 package org.vaadin.addons.demo;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,9 +16,12 @@ import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 @Theme("valo")
 @Title("Exporter Add-on Demo")
@@ -35,24 +40,58 @@ public class DemoUI extends UI
         layout.setMargin(true);
         setContent(layout);
         
-        Table sampleTable;
+        final Table sampleTable;
         try {
             sampleTable = createExampleTable();
-            layout.addComponent(sampleTable);
-            ExcelExporter excelExporter = new ExcelExporter();
+            Button addData = new Button( "Add More data");
+            layout.addComponents( addData, sampleTable);
+            final ExcelExporter excelExporter = new ExcelExporter();
             excelExporter.setDateFormat("yyyy-MM-dd");
             excelExporter.setTableToBeExported(sampleTable);
-            excelExporter.setCaption("Export to Excel");
+            excelExporter.setCaption("Export to Excel (no date)");
             layout.addComponent(excelExporter);
-            CSVExporter csvExporter = new CSVExporter();
-            csvExporter.setCaption("Export to CSV");
+            
+            final CSVExporter csvExporter = new CSVExporter();
+            csvExporter.setCaption("Export to CSV (no date)");
             csvExporter.setContainerToBeExported(sampleTable
                                                  .getContainerDataSource());
             csvExporter.setVisibleColumns(sampleTable.getVisibleColumns());
             layout.addComponent(csvExporter);
             
-            excelExporter.setDownloadFileName("demo-excel-exporter");
+            excelExporter.setDownloadFileName("demo-excel-exporter.xls");
             csvExporter.setDownloadFileName("demo-csv-exporter.csv");
+            
+            final ExcelExporter excelExporter2 = new ExcelExporter();
+            excelExporter2.setDateFormat("yyyy-MM-dd");
+            excelExporter2.setTableToBeExported(sampleTable);
+            excelExporter2.setCaption("Export to Excel (with date)");
+            layout.addComponent(excelExporter2);
+            
+            final CSVExporter csvExporter2 = new CSVExporter();
+            csvExporter2.setCaption("Export to CSV (with date)");
+            csvExporter2.setContainerToBeExported(sampleTable
+                                                 .getContainerDataSource());
+            csvExporter2.setVisibleColumns(sampleTable.getVisibleColumns());
+            layout.addComponent(csvExporter2);
+            
+            excelExporter2.setDownloadFileName("demo-excel-exporter");
+            csvExporter2.setDownloadFileName("demo-csv-exporter");
+            
+            addData.addClickListener(new ClickListener() {
+				
+				@Override
+				public void buttonClick(ClickEvent event) {
+					String firstName = generateName("addF");
+					String lastName = generateName("addL");
+					sampleTable.addItem(new Object[] { firstName, lastName, new Date() },
+							new Integer(++lastLine));
+					
+					excelExporter.setTableToBeExported(sampleTable);
+		            csvExporter.setContainerToBeExported(sampleTable.getContainerDataSource());
+		            excelExporter2.setTableToBeExported(sampleTable);
+		            csvExporter2.setContainerToBeExported(sampleTable.getContainerDataSource());
+				}
+			});
         } catch (UnsupportedOperationException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -61,9 +100,22 @@ public class DemoUI extends UI
         
     }
     
+    private String generateName( String prefix ) {
+    	String name;
+    	
+        double doubleName = Math.random();
+        BigDecimal bd = new BigDecimal(doubleName);
+        bd = bd.setScale(2, RoundingMode.HALF_UP );
+        name = prefix + bd.toString();
+    	
+    	return name;
+    }
+    
+    private int lastLine = 0;
     private Table createExampleTable() throws UnsupportedOperationException, ParseException {
         /* Create the table with a caption. */
         Table table = new Table("This is my Table");
+        table.setImmediate(true);
         
         /*
          * Define the names and data types of columns. The "default value"
@@ -75,18 +127,25 @@ public class DemoUI extends UI
         
         /* Add a few items in the table. */
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String firstName = generateName("loadF");
+		String lastName = generateName("loadL");
+		table.addItem(new Object[] { firstName, lastName, new Date() }, new Integer(++lastLine));
         table.addItem(new Object[] { "Nicolaus", "Copernicus",
-            formatter.parse("1473-02-12") }, new Integer(1));
+            formatter.parse("1473-02-12") }, new Integer(++lastLine));
         table.addItem(new Object[] { "Tycho", "Brahe", formatter.parse("1473-01-12") },
-                      new Integer(2));
+                      new Integer(++lastLine));
         table.addItem(new Object[] { "Giordano", "Bruno", formatter.parse("1546-03-09") },
-                      new Integer(3));
+                      new Integer(++lastLine));
         table.addItem(new Object[] { "Galileo", "Galilei",formatter.parse("1548-04-09") },
-                      new Integer(4));
+                      new Integer(++lastLine));
         table.addItem(new Object[] { "Johannes", "Kepler", formatter.parse("1564-06-07") },
-                      new Integer(5));
+                      new Integer(++lastLine));
         table.addItem(new Object[] { "Isaac", "Newton", formatter.parse("1546-08-09") },
-                      new Integer(6));
+                      new Integer(++lastLine));
+        firstName = generateName("loadF");
+		lastName = generateName("loadL");
+		table.addItem(new Object[] { firstName, lastName, new Date() }, new Integer(++lastLine));
+		
         return table;
     }
 

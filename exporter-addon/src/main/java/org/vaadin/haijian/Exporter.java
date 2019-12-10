@@ -3,6 +3,7 @@ package org.vaadin.haijian;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Container;
@@ -19,11 +20,13 @@ public abstract class Exporter extends Button implements StreamSource {
     private Locale locale;
     private String dateFormatString;
     protected String downloadFileName;
+    private SimpleDateFormat fileDateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public Exporter() {
         fileDownloader = new FileDownloader(new StreamResource(this,
                 getDownloadFileName()));
         fileDownloader.extend(this);
+        ((StreamResource) fileDownloader.getFileDownloadResource()).setCacheTime(0);
     }
 
     public Exporter(Table table) {
@@ -62,6 +65,8 @@ public abstract class Exporter extends Button implements StreamSource {
 		if (dateFormatString != null) {
 			fileBuilder.setDateFormat(dateFormatString);
 		}
+		
+		setDownloadFileName(getDownloadFileName());
 	}
 
     public void setVisibleColumns(Object[] visibleColumns) {
@@ -87,6 +92,8 @@ public abstract class Exporter extends Button implements StreamSource {
     protected abstract FileBuilder createFileBuilder(Container container);
 
     protected abstract String getDownloadFileName();
+
+	protected abstract String getDefaultDownloadFileName();
     
     public void setDownloadFileName(String fileName){
     	downloadFileName = fileName;
@@ -101,5 +108,12 @@ public abstract class Exporter extends Button implements StreamSource {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    
+    protected SimpleDateFormat getDateTimeFmt() {
+    	if( fileDateTimeFmt == null )
+    		fileDateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
+    	return fileDateTimeFmt;
     }
 }
