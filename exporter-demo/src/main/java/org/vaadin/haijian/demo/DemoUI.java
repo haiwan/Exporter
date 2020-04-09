@@ -1,4 +1,4 @@
-package org.vaadin.addons.demo;
+package org.vaadin.haijian.demo;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -6,9 +6,10 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
-import org.vaadin.addons.demo.helpers.GridDemoViewCreator;
 
 import javax.servlet.annotation.WebServlet;
+
+import org.vaadin.haijian.demo.helpers.GridDemoViewCreator;
 
 @Theme("valo")
 @Title("Exporter Add-on Demo")
