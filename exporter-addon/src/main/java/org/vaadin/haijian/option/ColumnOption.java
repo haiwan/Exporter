@@ -30,11 +30,11 @@ public class ColumnOption {
         return this;
     }
 
-    public <ITEM, PROPERTY> void setValueProviderFunction(ValueProvider<ITEM, PROPERTY> valueProvider) {
+    public <ITEM, PROPERTY> void valueProviderFunction(ValueProvider<ITEM, PROPERTY> valueProvider) {
         this.valueProvider = valueProvider;
     }
 
-    public <ITEM, PROPERTY> void setHeaderProviderFunction(SerializableFunction<String, String> headerProvider) {
+    public <ITEM, PROPERTY> void headerProviderFunction(SerializableFunction<String, String> headerProvider) {
         this.headerProvider = headerProvider;
     }
 

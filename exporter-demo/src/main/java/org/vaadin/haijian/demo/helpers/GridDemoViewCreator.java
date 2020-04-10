@@ -69,9 +69,9 @@ public class GridDemoViewCreator {
 
         ExporterOption exporterOption = new ExporterOption();
         exporterOption.getColumnOption("name").columnName("My Name").toUpperCase();
-        //exporterOption.getColumnOption("email").columnName("My Email");
-        exporterOption.getColumnOption("age").setHeaderProviderFunction(value -> "True " + value);
-        exporterOption.getColumnOption("age").setValueProviderFunction(source -> {return (int) Math.round(Math.sqrt(((Person)source).getAge()));});
+        exporterOption.getColumnOption("email").columnName("My Email");
+        exporterOption.getColumnOption("age").headerProviderFunction(value -> "Current " + value + " x10");
+        exporterOption.getColumnOption("age").valueProviderFunction(source -> {return (int) ((Person)source).getAge() * 10;});
 
         StreamResource excelStreamResourceWithCustomHeader = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid, exporterOption), "my-excel-with-cutom-header.xlsx");
         FileDownloader excelFileDownloaderWithCustomHeader = new FileDownloader(excelStreamResourceWithCustomHeader);
