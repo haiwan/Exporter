@@ -12,4 +12,4 @@
 *.cache
 .settings/
 widgetsets/
-target/*
+*/target/*
