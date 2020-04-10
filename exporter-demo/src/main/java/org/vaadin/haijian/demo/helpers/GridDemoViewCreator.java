@@ -1,5 +1,6 @@
-package org.vaadin.addons.demo.helpers;
+package org.vaadin.haijian.demo.helpers;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.data.provider.DataProvider;
@@ -69,7 +70,8 @@ public class GridDemoViewCreator {
         ExporterOption exporterOption = new ExporterOption();
         exporterOption.getColumnOption("name").columnName("My Name").toUpperCase();
         exporterOption.getColumnOption("email").columnName("My Email");
-        exporterOption.getColumnOption("age").toUpperCase();
+        exporterOption.getColumnOption("age").headerProviderFunction(value -> "Current " + value + " x10");
+        exporterOption.getColumnOption("age").valueProviderFunction(source -> {return (int) ((Person)source).getAge() * 10;});
 
         StreamResource excelStreamResourceWithCustomHeader = new StreamResource((StreamResource.StreamSource) () -> Exporter.exportAsExcel(grid, exporterOption), "my-excel-with-cutom-header.xlsx");
         FileDownloader excelFileDownloaderWithCustomHeader = new FileDownloader(excelStreamResourceWithCustomHeader);

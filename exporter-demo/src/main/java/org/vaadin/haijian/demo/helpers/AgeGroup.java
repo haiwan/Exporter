@@ -1,4 +1,4 @@
-package org.vaadin.addons.demo.helpers;
+package org.vaadin.haijian.demo.helpers;
 
 public class AgeGroup {
 
