@@ -12,6 +12,19 @@ public class DemoView extends HorizontalLayout {
 
     public DemoView() {
         setWidth("100%");
+
+        VerticalLayout withBeanTypeGrid = new VerticalLayout();
+        expand(withBeanTypeGrid);
+        withBeanTypeGrid.add(new Span("Grid With Bean type default property names"));
+        Component beanTypeGrid = GridDemoViewCreator.createGridWithBeanTypeDemo();
+        withBeanTypeGrid.add(beanTypeGrid);
+
+        VerticalLayout withBeanTypeGridCustomHeaders = new VerticalLayout();
+        expand(withBeanTypeGridCustomHeaders);
+        withBeanTypeGridCustomHeaders.add(new Span("Grid With Bean type custom property names"));
+        Component beanTypeGridCustomHeaders = GridDemoViewCreator.createGridWithBeanTypeCustomHeadersDemo();
+        withBeanTypeGridCustomHeaders.add(beanTypeGridCustomHeaders);
+
         VerticalLayout withNormalGrid = new VerticalLayout();
         expand(withNormalGrid);
         withNormalGrid.add(new Span("Grid With List data provider"));
@@ -23,6 +36,7 @@ public class DemoView extends HorizontalLayout {
         Component lazyGrid = GridDemoViewCreator.createGridWithLazyLoadingDemo();
         withLazyLoadingGrid.add(new Span("Grid with Lazy loading data provider"));
         withLazyLoadingGrid.add(lazyGrid);
-        add(withNormalGrid, withLazyLoadingGrid);
+
+        add(withBeanTypeGrid, withBeanTypeGridCustomHeaders, withNormalGrid, withLazyLoadingGrid);
     }
 }

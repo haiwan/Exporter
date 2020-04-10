@@ -36,6 +36,26 @@ Exporter.exportAsExcel(grid, gridHeaderMap)
 
 Exporter works as using reflection to read property from each item, any column without a valid key will be ignored.
 
+When grid is created using bean type create map where Column is key and header text is value. Pass that map as argument to Exporter subclass constructor.
+If map is null then default column key will be used for creating column header in excel.
+```
+private Map<Column<MyEntity>, String> gridHeaderMap;
+...
+Exporter.exportAsExcel(grid, gridHeaderMap)
+```
+
+In case when grid is created without bean type (adding columns with value providers) then map with column headers is mandatory. 
+ 
+### Data formats, excel built-in and custom data formats
+
+By default excel exporter will use default excel data formats for date, time and numbers. To set custom formats:
+```
+DataFormats formats = new TypeDataFormats();
+formats.localDateFormat("DDD-MMM-YY");
+Exporter.exportAsExcel(grid, gridHeaderMap, formats);
+```
+
+
 ## Development instructions
 
 Starting the test/demo server:
