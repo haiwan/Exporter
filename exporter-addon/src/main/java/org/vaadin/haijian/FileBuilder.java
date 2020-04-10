@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -148,7 +147,7 @@ public abstract class FileBuilder<T> {
 
     @SuppressWarnings("unchecked")
     private void buildRow(T item) {
-        if (propertySet == null) {
+        if (/*option.isUseItemProperties() && */propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
         }
 
