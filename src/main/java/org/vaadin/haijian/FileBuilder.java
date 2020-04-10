@@ -113,6 +113,7 @@ public abstract class FileBuilder<T> {
             });
         }
     }
+  }
 
 
     void buildColumnHeaderCell(String header) {
