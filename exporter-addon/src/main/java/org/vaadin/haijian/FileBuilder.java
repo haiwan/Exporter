@@ -147,7 +147,7 @@ public abstract class FileBuilder<T> {
 
     @SuppressWarnings("unchecked")
     private void buildRow(T item) {
-        if (/*option.isUseItemProperties() && */propertySet == null) {
+        if (propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
         }
 
