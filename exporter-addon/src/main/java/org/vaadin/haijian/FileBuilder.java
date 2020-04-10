@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.Query;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 public abstract class FileBuilder<T> {
     private static final String TMP_FILE_NAME = "tmp";
@@ -36,8 +38,7 @@ public abstract class FileBuilder<T> {
     FileBuilder(Grid<T> grid, ExporterOption option) {
         this.grid = Objects.requireNonNull(grid);
         this.option = Objects.requireNonNull(option);
-
-        columns = grid.getColumns().stream().filter(this::isExportable).collect(Collectors.toList());
+        columns = grid.getColumns().stream().filter(this::isColumnExportable).collect(Collectors.toList());
         if (columns.isEmpty()) {
             throw new ExporterException(
                     "No exportable column found, did you remember to set property name as the key for column");
@@ -45,7 +46,7 @@ public abstract class FileBuilder<T> {
 
     }
 
-    private boolean isExportable(Grid.Column column) {
+    private boolean isColumnExportable(Grid.Column column) {
         if (column.isHidden()) {
             return false;
         }
@@ -55,20 +56,6 @@ public abstract class FileBuilder<T> {
         }
 
         if (column.getId().trim().isEmpty()) {
-            return false;
-        }
-
-        if (option.isUseItemProperties()) {
-            if (propertySet == null) {
-                return false;
-            }
-
-            if (!propertySet.getProperty(column.getId()).isPresent()) {
-                return false;
-            }
-        }
-
-        if (!option.getColumnOption(column.getId()).getValueProviderFunction().isPresent()) {
             return false;
         }
 
@@ -104,8 +91,11 @@ public abstract class FileBuilder<T> {
 
     private void buildHeaderRow() {
         columns.forEach(column -> {
-            if (option.isUseItemProperties()) {
-                Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getId());
+        	if (getColumnOption(column).getHeaderProviderFunction().isPresent()) {
+                onNewCell();
+                buildColumnHeaderCell(getColumnOption(column).getHeaderProviderFunction().get().apply(column.getId()));
+        	} else {
+        		Optional<PropertyDefinition<T, ?>> propertyDefinition = propertySet.getProperty(column.getId());
                 if (propertyDefinition.isPresent()) {
                     onNewCell();
                     buildColumnHeaderCell(getColumnHeader(propertyDefinition.get()));
@@ -113,14 +103,7 @@ public abstract class FileBuilder<T> {
                     LoggerFactory.getLogger(this.getClass())
                             .warn(String.format("Column id %s is a property which cannot be found", column.getId()));
                 }
-            } else {
-                ColumnOption columnOption = option.getColumnOption(column.getId());
-                columnOption.getHeaderProviderFunction().ifPresent(headerProvider -> {
-                    String header = headerProvider.apply(column.getId());
-                    onNewCell();
-                    buildCell(header);
-                });
-            }
+        	}
         });
 
         headerRowBuilt = true;
@@ -165,19 +148,18 @@ public abstract class FileBuilder<T> {
 
     @SuppressWarnings("unchecked")
     private void buildRow(T item) {
-        if (option.isUseItemProperties() && propertySet == null) {
+        if (propertySet == null) {
             propertySet = (PropertySet<T>) BeanPropertySet.get(item.getClass());
-            columns = columns.stream().filter(this::isExportable).collect(Collectors.toList());
         }
+
         if (!headerRowBuilt) {
             buildHeaderRow();
             onNewRow();
         }
         columns.forEach(column -> {
-            ColumnOption columnOption = option.getColumnOption(column.getId());
-            Optional<ValueProvider<Object, Object>> getterFunction = columnOption.getValueProviderFunction();
-            if (getterFunction.isPresent()) {
-                Object value = getterFunction.get().apply(item);
+        	Optional<ValueProvider<Object, Object>> optionalGetter = getColumnOption(column).getValueProviderFunction();
+            if (optionalGetter.isPresent()) {
+                Object value = optionalGetter.get().apply(item);
                 onNewCell();
                 buildCell(value);
             } else {
@@ -187,11 +169,15 @@ public abstract class FileBuilder<T> {
                     buildCell(propertyDefinition.get().getGetter().apply(item));
                 } else {
                     throw new ExporterException(
-                            "Column id: " + column.getId() + " is a property which cannot be found");
+                            "Property for column id: " + column.getId() + " cannot be found");
                 }
             }
         });
     }
+
+	private ColumnOption getColumnOption(Column column) {
+		return option.getColumnOption(column.getId());
+	}
 
     void onNewRow() {
 
