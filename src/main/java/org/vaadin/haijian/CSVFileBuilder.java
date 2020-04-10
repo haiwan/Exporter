@@ -32,6 +32,8 @@ public class CSVFileBuilder<T> extends FileBuilder<T> {
         try {
             if(value == null){
                 writer.append("");
+            }else if (value.toString().contains(",")) {
+                writer.append("\"").append(value.toString()).append("\"");
             }else {
                 writer.append(value.toString());
             }
